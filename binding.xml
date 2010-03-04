@@ -1,0 +1,57 @@
+<binding name="plot_xml_binding" package="uk.co.gregorydoran.plotxml.editor.xml_binding" trim-whitespace="true">
+  <mapping abstract="true" type-name="PlotType" class="dflt.PlotType">
+    <collection get-method="getDecisions" set-method="setDecisions" create-type="java.util.ArrayList">
+      <structure map-as="DecisionsType" name="decisions"/>
+    </collection>
+    <value style="attribute" name="name" get-method="getName" set-method="setName" usage="optional"/>
+  </mapping>
+  <mapping class="dflt.PlotType" name="plot">
+    <structure map-as="PlotType"/>
+  </mapping>
+  <mapping abstract="true" type-name="DecisionsType" class="dflt.DecisionsType">
+    <collection get-method="getDecisions" set-method="setDecisions" create-type="java.util.ArrayList">
+      <structure map-as="DecisionType" name="decision"/>
+    </collection>
+  </mapping>
+  <mapping abstract="true" type-name="DecisionType" class="dflt.DecisionType">
+    <format type="dflt.DecisionType$Type" enum-value-method="toString"/>
+    <value style="element" name="english" get-method="getEnglish" set-method="setEnglish"/>
+    <structure map-as="DependenciesType" get-method="getDependencies" set-method="setDependencies" usage="optional" name="dependencies"/>
+    <structure map-as="OptionsType" get-method="getOptions" set-method="setOptions" name="options"/>
+    <structure map-as="ProbabilitiesType" get-method="getProbabilities" set-method="setProbabilities" name="probabilities"/>
+    <value style="attribute" name="name" get-method="getName" set-method="setName"/>
+    <value style="attribute" name="type" get-method="getType" set-method="setType"/>
+  </mapping>
+  <mapping abstract="true" type-name="OptionsType" class="dflt.OptionsType">
+    <collection get-method="getOptions" set-method="setOptions" create-type="java.util.ArrayList">
+      <structure map-as="OptionType" name="option"/>
+    </collection>
+  </mapping>
+  <mapping abstract="true" type-name="OptionType" class="dflt.OptionType">
+    <value style="element" name="english" get-method="getEnglish" set-method="setEnglish"/>
+    <structure map-as="DecisionsType" get-method="getDecisions" set-method="setDecisions" usage="optional" name="decisions"/>
+    <value style="attribute" name="name" get-method="getName" set-method="setName"/>
+  </mapping>
+  <mapping abstract="true" type-name="DependenciesType" class="dflt.DependenciesType">
+    <collection get-method="getDecisions" set-method="setDecisions" create-type="java.util.ArrayList">
+      <value style="element" name="decision" type="java.lang.String"/>
+    </collection>
+  </mapping>
+  <mapping abstract="true" type-name="ProbabilitiesType" class="dflt.ProbabilitiesType">
+    <collection get-method="getGivens" set-method="setGivens" create-type="java.util.ArrayList">
+      <structure map-as="GivenType" name="given"/>
+    </collection>
+    <structure map-as="ProbType" get-method="getProb" set-method="setProb" usage="optional" name="prob"/>
+  </mapping>
+  <mapping abstract="true" type-name="GivenType" class="dflt.GivenType">
+    <collection get-method="getGivens" set-method="setGivens" create-type="java.util.ArrayList">
+      <structure map-as="GivenType" name="given"/>
+    </collection>
+    <value style="element" name="prob" get-method="getProb" set-method="setProb" usage="optional"/>
+    <value style="attribute" name="option_name" get-method="getOptionName" set-method="setOptionName"/>
+  </mapping>
+  <mapping abstract="true" type-name="ProbType" class="dflt.ProbType">
+    <value style="attribute" name="option_name" get-method="getOptionName" set-method="setOptionName"/>
+    <value style="attribute" name="value" get-method="getValue" set-method="setValue" usage="optional"/>
+  </mapping>
+</binding>
