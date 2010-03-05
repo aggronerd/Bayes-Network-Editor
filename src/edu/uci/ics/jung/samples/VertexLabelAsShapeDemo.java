@@ -105,7 +105,7 @@ public class VertexLabelAsShapeDemo extends JApplet {
         vv.getRenderer().setVertexRenderer(new GradientVertexRenderer<String,Number>(Color.gray, Color.white, true));
         vv.getRenderer().setVertexLabelRenderer(vlasr);
 
-        vv.setBackground(Color.black);
+        vv.setBackground(Color.white);
         
         // add a listener for ToolTips
         vv.setVertexToolTipTransformer(new ToStringLabeller<String>());

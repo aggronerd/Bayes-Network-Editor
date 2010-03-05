@@ -22,12 +22,12 @@ package uk.co.gregorydoran.plotxml.editor.xml_binding;
  */
 public class DecisionType
 {
-    private String english;
-    private DependenciesType dependencies;
-    private OptionsType options;
-    private ProbabilitiesType probabilities;
-    private String name;
-    private Type type;
+    protected String english;
+    protected DependenciesType dependencies;
+    protected OptionsType options;
+    protected ProbabilitiesType probabilities;
+    protected String name;
+    protected Type type;
 
     /** 
      * Get the 'english' element value.
