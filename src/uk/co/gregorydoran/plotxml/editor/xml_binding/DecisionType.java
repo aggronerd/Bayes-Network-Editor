@@ -29,6 +29,13 @@ public class DecisionType
     protected String name;
     protected Type type;
 
+    public DecisionType() 
+    {
+		options = new OptionsType();
+		this.options.getOptions().add(new OptionType("0"));
+		this.options.getOptions().add(new OptionType("1"));
+	}
+    
     /** 
      * Get the 'english' element value.
      * 

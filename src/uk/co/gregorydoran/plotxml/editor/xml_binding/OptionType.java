@@ -19,6 +19,14 @@ public class OptionType
     private DecisionsType decisions;
     private String name;
 
+    public OptionType(String name_value)
+    {
+    	name = name_value;
+    }
+    
+    public OptionType()
+    {}
+    
     /** 
      * Get the 'english' element value.
      * 
