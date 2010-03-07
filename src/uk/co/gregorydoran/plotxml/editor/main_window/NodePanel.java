@@ -35,7 +35,7 @@ public class NodePanel extends JPanel implements EventListener {
 
 	private static final long serialVersionUID = -4341231428121402538L;
 	
-	private JPanel probPanel;
+	private JTable probTable;
 	private JTextField nameField;
 	
 	private Decision activeDecision;
@@ -70,11 +70,11 @@ public class NodePanel extends JPanel implements EventListener {
 		nameField = new JTextField(30);
 		nameField.setVisible(true);
 		
-		probPanel = new JPanel();
+		probTable = new JTable();
 		
 		this.add(new JLabel("Name:"));
 		this.add(nameField);
-		this.add(probPanel);
+		this.add(probTable);
 	}
 	
 	/**
@@ -85,7 +85,11 @@ public class NodePanel extends JPanel implements EventListener {
 		if(activeDecision == null)
 		{
 			nameField.setVisible(false);
-			probPanel.removeAll();
+			if (probTable != null)
+			{
+				this.remove(probTable);
+				probTable = null;
+			}
 		}
 		else
 		{
@@ -94,50 +98,83 @@ public class NodePanel extends JPanel implements EventListener {
 			nameField.setVisible(true);
 		
 			//Setup the probability controls
+			if (probTable != null)
+			{
+				this.remove(probTable);
+				probTable = null;
+			}
+			
+			//Order is important so we convert the collection to a list.
 			List<Decision> dependencies = new ArrayList<Decision>();
 			Collection<Decision> collection = activeGraph.getPredecessors(activeDecision);
+			String[] headers = new String[collection.size()+2];
+			int i = 0;
 			for (Decision d : collection)
+			{
 				dependencies.add(d);
+				headers[i] = d.getName();
+				i++;
+			}
 			dependencies.add(activeDecision);
-			probPanel.add(getProbPanel(dependencies));
+			headers[i] = activeDecision.getName();
+			headers[i+1] = "Value";
+			
+			Object[][] vals = getProbTableData(dependencies);
+			vals.toString();
 			
 		}
 	}
 	
-	JPanel getProbPanel(List<Decision> toAdd)
+	Object[][] getProbTableData(List<Decision> toAdd)
 	{
 		//Pop the decision form the collection.
 		Decision decision = toAdd.get(0);
 		toAdd.remove(decision);
 		
-		JPanel panel = new JPanel();
-		
 		//Retrieve options to make up left hand column.
 		List<OptionType> options = decision.getOptions().getOptions();
-	
-		//Setup layout to the correct size.
-		panel.setLayout(new GridLayout(options.size(),2));
-		
-		//Itterate through the options
-		for (OptionType o : options)
-		{
-			panel.add(new JLabel(o.getName()));
 			
-			if(toAdd.size() == 0)
+		Object[][] tableData;
+		int i = 0;
+		
+		if(toAdd.size() == 0)
+		{
+			//This is the last therefore we display the controls.
+			tableData = new Object[2][options.size()];
+			for (OptionType o : options)
 			{
-				//Display the probability control.
-				panel.add(new JSlider(0,100,50));
-			}
-			else
-			{
-				//Recursive call will provide the same for remaining
-				// values in toAdd.
-				panel.add(getProbPanel(toAdd));
+				tableData[i][0] = o.getName(); 
+				tableData[i][1] = new JSlider(0,100,50);
+				i++;
 			}
 		}
-		
-		return(panel);
-		
+		else
+		{
+			//Still more decisions to add so we call recursively.
+			Object[][] subTableData = getProbTableData(toAdd);
+			
+			//Create an array big enough to fit both.
+			tableData = new Object[subTableData.length * options.size()][1+subTableData[0].length];
+			
+			//Itterate through the options
+			int k = 0;
+			for (OptionType o : options)
+			{
+				for(i=0; i < subTableData.length; i++)
+				{
+					//Add the current option's name downwards.
+					tableData[(k*subTableData.length)+i][0] = o.getName();
+					
+					//Add the values from the subtable.
+					for(int j=0; j < subTableData[i].length; j++)
+					{
+						tableData[(k*subTableData.length)+i][j+1] = subTableData[j][i];
+					}
+				}
+				k++;
+			}
+		}
+		return(tableData);
 	}
 	
 	
