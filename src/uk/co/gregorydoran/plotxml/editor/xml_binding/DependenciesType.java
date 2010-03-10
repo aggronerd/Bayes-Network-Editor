@@ -1,11 +1,11 @@
-
 package uk.co.gregorydoran.plotxml.editor.xml_binding;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/** 
+/**
  * Schema fragment(s) for this class:
+ * 
  * <pre>
  * &lt;xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="DependenciesType">
  *   &lt;xs:sequence>
@@ -16,23 +16,25 @@ import java.util.List;
  */
 public class DependenciesType
 {
-    private List<String> decisionList = new ArrayList<String>();
+    private List<DecisionType> decisionList = new ArrayList<DecisionType>();
 
-    /** 
+    /**
      * Get the list of 'decision' element items.
      * 
      * @return list
      */
-    public List<String> getDecisions() {
-        return decisionList;
+    public List<DecisionType> getDecisions()
+    {
+	return decisionList;
     }
 
-    /** 
+    /**
      * Set the list of 'decision' element items.
      * 
      * @param list
      */
-    public void setDecisions(List<String> list) {
-        decisionList = list;
+    public void setDecisions(List<DecisionType> list)
+    {
+	decisionList = list;
     }
 }

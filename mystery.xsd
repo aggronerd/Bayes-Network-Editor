@@ -86,7 +86,7 @@
   		<xs:element name="given" type="GivenType" minOccurs="0"
   			maxOccurs="unbounded">
   		</xs:element>
-  		<xs:element name="prob" type="xs:string" minOccurs="0" maxOccurs="1"></xs:element>
+  		<xs:element name="prob" type="ProbType" minOccurs="0" maxOccurs="unbounded"></xs:element>
   	</xs:sequence>
   	<xs:attribute name="option_name" type="xs:string" use="required"></xs:attribute>
   </xs:complexType>

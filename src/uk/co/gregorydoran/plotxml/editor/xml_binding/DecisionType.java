@@ -1,8 +1,9 @@
-
 package uk.co.gregorydoran.plotxml.editor.xml_binding;
 
-/** 
+
+/**
  * Schema fragment(s) for this class:
+ * 
  * <pre>
  * &lt;xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="DecisionType">
  *   &lt;xs:sequence>
@@ -29,128 +30,142 @@ public class DecisionType
     protected String name;
     protected Type type;
 
-    public DecisionType() 
+    public DecisionType()
     {
-		options = new OptionsType();
-		this.options.getOptions().add(new OptionType("0"));
-		this.options.getOptions().add(new OptionType("1"));
-	}
-    
-    /** 
+	options = new OptionsType();
+	this.options.getOptions().add(new OptionType("0"));
+	this.options.getOptions().add(new OptionType("1"));
+	dependencies = new DependenciesType();
+    }
+
+    /**
      * Get the 'english' element value.
      * 
      * @return value
      */
-    public String getEnglish() {
-        return english;
+    public String getEnglish()
+    {
+	return english;
     }
 
-    /** 
+    /**
      * Set the 'english' element value.
      * 
      * @param english
      */
-    public void setEnglish(String english) {
-        this.english = english;
+    public void setEnglish(String english)
+    {
+	this.english = english;
     }
 
-    /** 
+    /**
      * Get the 'dependencies' element value.
      * 
      * @return value
      */
-    public DependenciesType getDependencies() {
-        return dependencies;
+    public DependenciesType getDependencies()
+    {
+	return dependencies;
     }
 
-    /** 
+    /**
      * Set the 'dependencies' element value.
      * 
      * @param dependencies
      */
-    public void setDependencies(DependenciesType dependencies) {
-        this.dependencies = dependencies;
+    public void setDependencies(DependenciesType dependencies)
+    {
+	this.dependencies = dependencies;
     }
 
-    /** 
+    /**
      * Get the 'options' element value.
      * 
      * @return value
      */
-    public OptionsType getOptions() {
-        return options;
+    public OptionsType getOptions()
+    {
+	return options;
     }
 
-    /** 
+    /**
      * Set the 'options' element value.
      * 
      * @param options
      */
-    public void setOptions(OptionsType options) {
-        this.options = options;
+    public void setOptions(OptionsType options)
+    {
+	this.options = options;
     }
 
-    /** 
+    /**
      * Get the 'probabilities' element value.
      * 
      * @return value
      */
-    public ProbabilitiesType getProbabilities() {
-        return probabilities;
+    public ProbabilitiesType getProbabilities()
+    {
+	return probabilities;
     }
 
-    /** 
+    /**
      * Set the 'probabilities' element value.
      * 
      * @param probabilities
      */
-    public void setProbabilities(ProbabilitiesType probabilities) {
-        this.probabilities = probabilities;
+    public void setProbabilities(ProbabilitiesType probabilities)
+    {
+	this.probabilities = probabilities;
     }
 
-    /** 
+    /**
      * Get the 'name' attribute value.
      * 
      * @return value
      */
-    public String getName() {
-        return name;
+    public String getName()
+    {
+	return name;
     }
 
-    /** 
+    /**
      * Set the 'name' attribute value.
      * 
      * @param name
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String name)
+    {
+	// TODO: Check decision name is unique.
+	this.name = name;
     }
 
-    /** 
-     * Get the 'type' attribute value. 
-     Indicates to the interpreter the type of the chosen
-     result.
-     
+    /**
+     * Get the 'type' attribute value. Indicates to the interpreter the type of
+     * the chosen result.
+     * 
      * 
      * @return value
      */
-    public Type getType() {
-        return type;
+    public Type getType()
+    {
+	return type;
     }
 
-    /** 
-     * Set the 'type' attribute value. 
-     Indicates to the interpreter the type of the chosen
-     result.
-     
+    /**
+     * Set the 'type' attribute value. Indicates to the interpreter the type of
+     * the chosen result.
+     * 
      * 
      * @param type
      */
-    public void setType(Type type) {
-        this.type = type;
+    public void setType(Type type)
+    {
+	this.type = type;
     }
-    /** 
+
+    /**
      * Schema fragment(s) for this class:
+     * 
      * <pre>
      * &lt;xs:simpleType xmlns:xs="http://www.w3.org/2001/XMLSchema">
      *   &lt;xs:restriction base="xs:string">
@@ -161,25 +176,51 @@ public class DecisionType
      * &lt;/xs:simpleType>
      * </pre>
      */
-    public static enum Type {
-        INT("int"), STRING("string"), DOUBLE("double");
-        private final String value;
+    public static enum Type
+    {
+	INT("int"), STRING("string"), DOUBLE("double");
+	private final String value;
 
-        private Type(String value) {
-            this.value = value;
-        }
+	private Type(String value)
+	{
+	    this.value = value;
+	}
 
-        public String toString() {
-            return value;
-        }
+	public String toString()
+	{
+	    return value;
+	}
 
-        public static Type convert(String value) {
-            for (Type inst : values()) {
-                if (inst.toString().equals(value)) {
-                    return inst;
-                }
-            }
-            return null;
-        }
+	public static Type convert(String value)
+	{
+	    for (Type inst : values())
+	    {
+		if (inst.toString().equals(value))
+		{
+		    return inst;
+		}
+	    }
+	    return null;
+	}
     }
+
+    /**
+     * Returns the path to this decision in the plot XML file.
+     * 
+     * @return
+     */
+    public String getPath()
+    {
+	// TODO: Add paths.
+	return (name);
+    }
+
+    /**
+     * Removes all dependencies from the class.
+     */
+    public void clearDependencies()
+    {
+	dependencies.getDecisions().clear();
+    }
+
 }
