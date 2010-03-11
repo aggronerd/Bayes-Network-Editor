@@ -41,7 +41,9 @@
     <collection get-method="getGivens" set-method="setGivens" create-type="java.util.ArrayList">
       <structure map-as="GivenType" name="given"/>
     </collection>
-    <structure map-as="ProbType" get-method="getProb" set-method="setProb" usage="optional" name="prob"/>
+    <collection get-method="getProbs" set-method="setProbs" create-type="java.util.ArrayList">
+      <structure map-as="ProbType" name="prob" />
+    </collection>
   </mapping>
   <mapping abstract="true" type-name="GivenType" class="GivenType">
     <collection get-method="getGivens" set-method="setGivens" create-type="java.util.ArrayList">

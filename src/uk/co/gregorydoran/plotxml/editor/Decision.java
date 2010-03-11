@@ -36,15 +36,32 @@ public class Decision extends DecisionType
 
 	// Update with ones from the graph.
 	Collection<Decision> collection = g.getPredecessors(this);
-	for (Decision d : collection)
-	{
-	    dependencies.getDecisions().add(d);
-	}
 
-	// Update probability elements
 	setProbabilities(new ProbabilitiesType());
-	getProbabilities().setGivens(
-		getNewGivens(getDependencies().getDecisions()));
+
+	if (collection.size() > 0)
+	{
+	    for (Decision d : collection)
+	    {
+		dependencies.getDecisions().add(d);
+	    }
+	    // Update probability elements
+
+	    getProbabilities().setGivens(
+		    getNewGivens(getDependencies().getDecisions()));
+	}
+	else
+	{
+	    // There are no dependencies so we just add the probabilities for
+	    // the options for this decision.
+	    for (OptionType o : this.getOptions().getOptions())
+	    {
+		ProbType p = new ProbType();
+		p.setValue(1.0f / this.getOptions().getOptions().size());
+		p.setOptionName(o.getName());
+		getProbabilities().getProbs().add(p);
+	    }
+	}
 
     }
 

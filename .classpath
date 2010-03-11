@@ -13,7 +13,6 @@
 	<classpathentry kind="lib" path="libs/jung-graph-impl-2.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/jung-io-2.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/jung-jai-2.0.1.jar"/>
-	<classpathentry kind="lib" path="libs/jung-jai-samples-2.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/jung-samples-2.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/jung-visualization-2.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/stax-api-1.0.1.jar"/>

@@ -1,6 +1,5 @@
 package uk.co.gregorydoran.plotxml.editor.xml_binding;
 
-
 /**
  * Schema fragment(s) for this class:
  * 
