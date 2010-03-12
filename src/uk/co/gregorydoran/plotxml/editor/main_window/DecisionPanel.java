@@ -1,16 +1,23 @@
 package uk.co.gregorydoran.plotxml.editor.main_window;
 
+import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import uk.co.gregorydoran.plotxml.editor.Decision;
+import uk.co.gregorydoran.plotxml.editor.xml_binding.OptionType;
 
-public class DecisionPanel extends JPanel
+public class DecisionPanel extends JPanel implements ActionListener
 {
 
     private static final long serialVersionUID = 1L;
@@ -18,8 +25,7 @@ public class DecisionPanel extends JPanel
     private JTextField jTextFieldName = null;
     private JLabel jLabelQuestion = null;
     private JTextArea jTextAreaQuestion = null;
-    private JLabel jLabelOptions = null;
-    private JTextField jTextFieldOptions = null;
+    private JButton jButtonEditOptions = null;
     private JLabel jLabelProbabilities = null;
     private Decision decision;
     private ProbabilitiesControl probPanel = null;
@@ -45,8 +51,6 @@ public class DecisionPanel extends JPanel
 	// Load the values from
 	jTextFieldName.setText(decision.getName());
 	jTextAreaQuestion.setText(decision.getEnglish());
-	jTextFieldOptions.setText(String.valueOf(decision.getOptions()
-		.getOptions().size()));
     }
 
     /**
@@ -90,21 +94,14 @@ public class DecisionPanel extends JPanel
 	gbcQuestionField.fill = GridBagConstraints.HORIZONTAL;
 	this.add(getJTextAreaQuestion(), gbcQuestionField);
 
-	// Options label
-	jLabelOptions = new JLabel("Number of Options:");
-	GridBagConstraints gbcOptionsLabel = new GridBagConstraints();
-	gbcOptionsLabel.gridx = 0;
-	gbcOptionsLabel.gridy = 2;
-	gbcOptionsLabel.anchor = GridBagConstraints.EAST;
-	this.add(jLabelOptions, gbcOptionsLabel);
-
-	// Options field
+	// Edit Options button
+	jButtonEditOptions = new JButton("Edit Options");
 	GridBagConstraints gbcOptionsField = new GridBagConstraints();
 	gbcOptionsField.gridx = 1;
 	gbcOptionsField.gridy = 2;
 	gbcOptionsField.anchor = GridBagConstraints.WEST;
-	gbcOptionsField.fill = GridBagConstraints.HORIZONTAL;
-	this.add(getJTextFieldOptions(), gbcOptionsField);
+	jButtonEditOptions.addActionListener(this);
+	this.add(jButtonEditOptions, gbcOptionsField);
 
 	// Probabilities label
 	jLabelProbabilities = new JLabel("Probabilities:");
@@ -155,20 +152,6 @@ public class DecisionPanel extends JPanel
     }
 
     /**
-     * This method initializes jTextFieldOptions
-     * 
-     * @return javax.swing.JTextField
-     */
-    private JTextField getJTextFieldOptions()
-    {
-	if (jTextFieldOptions == null)
-	{
-	    jTextFieldOptions = new JTextField();
-	}
-	return jTextFieldOptions;
-    }
-
-    /**
      * This method initializes probPanel
      * 
      * @return java.awt.Panel
@@ -183,4 +166,40 @@ public class DecisionPanel extends JPanel
 	return probPanel;
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+	editOptions();
+    }
+
+    /**
+     * Returns the parent JFrame which ultimately owns this container.
+     * 
+     * @return The parent JFrame.
+     */
+    private JFrame getParentWindow()
+    {
+	Container p = this.getParent();
+	while (p.getParent() != null)
+	{
+	    p = p.getParent();
+	}
+	return (JFrame) (p);
+    }
+
+    public void editOptions()
+    {
+	// Bit of a messy cast, but this should work. I'm in a rush and haven't
+	// got much time. You'd to the same, rather be writing the game.
+	OptionsEditor optionsEditorDialog = new OptionsEditor(
+		getParentWindow(), decision);
+
+	List<OptionType> newOptions = optionsEditorDialog.showEditOptions();
+
+	if (newOptions != null)
+	{
+	    decision.getOptions().setOptions(newOptions);
+	}
+
+    }
 }

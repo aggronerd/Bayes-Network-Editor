@@ -59,7 +59,7 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
     {
 	super("Plot XML Editor");
 
-	// Load menubar.
+	// Load menu bar.
 	menuBar = new MainWindowMenuBar(this);
 	this.setJMenuBar(menuBar);
 
@@ -102,7 +102,8 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	this.setVisible(true);
-	this.setSize(800, 600);
+	this.pack();
+
     }
 
     public Graph<Decision, Dependency> getGraph()
@@ -164,4 +165,5 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 	    splitPane.getRightComponent().validate();
 	}
     }
+
 }
