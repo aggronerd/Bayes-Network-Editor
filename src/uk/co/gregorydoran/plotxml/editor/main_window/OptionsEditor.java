@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import uk.co.gregorydoran.plotxml.editor.Decision;
 import uk.co.gregorydoran.plotxml.editor.xml_binding.OptionType;
@@ -35,6 +36,7 @@ public class OptionsEditor extends JDialog implements ActionListener
 
     private Decision decision = null;
     private List<OptionType> options;
+    DefaultTableModel tableData;
 
     private boolean cancelled = false;
 
@@ -65,7 +67,7 @@ public class OptionsEditor extends JDialog implements ActionListener
 	}
 	else
 	{
-	    return (options);
+	    return (decision.getOptions().getOptions());
 	}
     }
 
@@ -123,12 +125,26 @@ public class OptionsEditor extends JDialog implements ActionListener
      */
     private JTable getJTableOptions()
     {
+	if (tableData == null)
+	{
+	    tableData = new DefaultTableModel();
+	}
+
 	if (jTableOptions == null)
 	{
-	    String[][] content = { { "murder", "Murder" },
-		    { "assassination", "Assassination" } };
-	    String[] headers = { "Name", "Answer" };
-	    jTableOptions = new JTable(content, headers);
+	    // Prepare the table.
+	    String[] headers = { "Name", "English" };
+	    tableData.setColumnIdentifiers(headers);
+	    jTableOptions = new JTable(tableData);
+
+	    // Load the data into the table.
+	    String[] content = new String[2];
+	    for (OptionType o : decision.getOptions().getOptions())
+	    {
+		content[0] = o.getName();
+		content[1] = o.getEnglish();
+		tableData.addRow(content);
+	    }
 	}
 	return jTableOptions;
     }
@@ -144,6 +160,14 @@ public class OptionsEditor extends JDialog implements ActionListener
 	{
 	    jButtonAdd = new JButton();
 	    jButtonAdd.setText("Add");
+	    jButtonAdd.addActionListener(new java.awt.event.ActionListener()
+	    {
+		public void actionPerformed(java.awt.event.ActionEvent e)
+		{
+		    String row[] = { "new_option", "New Option" };
+		    tableData.addRow(row);
+		}
+	    });
 	}
 	return jButtonAdd;
     }
@@ -159,6 +183,14 @@ public class OptionsEditor extends JDialog implements ActionListener
 	{
 	    jButtonRemove = new JButton();
 	    jButtonRemove.setText("Remove");
+	    jButtonRemove.addActionListener(new java.awt.event.ActionListener()
+	    {
+		public void actionPerformed(java.awt.event.ActionEvent e)
+		{
+		    // Removes the selected row.
+		    tableData.removeRow(jTableOptions.getSelectedRow());
+		}
+	    });
 	}
 	return jButtonRemove;
     }
@@ -228,6 +260,27 @@ public class OptionsEditor extends JDialog implements ActionListener
 	{
 	    jButtonOk = new JButton();
 	    jButtonOk.setText("Ok");
+	    jButtonOk.addActionListener(new java.awt.event.ActionListener()
+	    {
+		public void actionPerformed(java.awt.event.ActionEvent e)
+		{
+		    // Update decision options.
+		    decision.getOptions().getOptions().clear();
+		    for (int i = 0; i < tableData.getRowCount(); i++)
+		    {
+			OptionType o = new OptionType();
+			o.setName((String) tableData.getValueAt(i, 0));
+			o.setEnglish((String) tableData.getValueAt(i, 1));
+		    }
+
+		    // Close the window.
+		    // TODO: I'm not much of a JAva programmer, but surely this
+		    // isn't how they do it?
+		    ((JButton) e.getSource()).getParent().getParent()
+			    .getParent().getParent().getParent().setVisible(
+				    false);
+		}
+	    });
 	}
 	return jButtonOk;
     }
@@ -247,10 +300,21 @@ public class OptionsEditor extends JDialog implements ActionListener
 	    {
 		public void actionPerformed(java.awt.event.ActionEvent e)
 		{
+		    // TODO: I'm not much of a JAva programmer, but surely this
+		    // isn't how they do it?
+		    ((JButton) e.getSource()).getParent().getParent()
+			    .getParent().getParent().getParent().setVisible(
+				    false);
+		}
+	    });
+	    jButtonCancel.addActionListener(new java.awt.event.ActionListener()
+	    {
+		public void actionPerformed(java.awt.event.ActionEvent e)
+		{
 		    System.out.println("actionPerformed()"); // TODO
-							     // Auto-generated
-							     // Event stub
-							     // actionPerformed()
+		    // Auto-generated
+		    // Event stub
+		    // actionPerformed()
 		}
 	    });
 	}
