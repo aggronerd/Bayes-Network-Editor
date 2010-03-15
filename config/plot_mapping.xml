@@ -1,0 +1,54 @@
+<binding name="plot_xml_binding" package="uk.co.gregorydoran.plotxml.editor.xml_binding">
+
+  <!-- Plot: -->
+  <mapping name="plot" class="uk.co.gregorydoran.plotxml.editor.xml_binding.PlotType">
+    <collection  create-type="java.util.ArrayList" name="decisions" field="decisions"/>
+    <value style="attribute" name="name" field="name" usage="optional"/>
+  </mapping>
+  
+  <!-- Decision: -->
+  <mapping name="decision" class="uk.co.gregorydoran.plotxml.editor.xml_binding.DecisionType">
+    <value style="attribute" name="name" field="name" ident="def"/>
+    <value style="element" name="english" field="english"/>
+    <value style="attribute" name="type" field="type"/>
+    
+    <!-- Dependencies: -->
+    <structure field="dependencies" usage="optional" name="dependencies" type="uk.co.gregorydoran.plotxml.editor.xml_binding.DependenciesType">
+    	<collection field="dependencyList" create-type="java.util.ArrayList">
+			<structure name="dependency" type="uk.co.gregorydoran.plotxml.editor.xml_binding.DependencyType">
+				<value name="decision" field="decision" ident="ref"/>
+			</structure>
+		</collection>
+    </structure>
+    
+    <!-- Options: -->
+    <structure field="options" name="options" type="uk.co.gregorydoran.plotxml.editor.xml_binding.OptionsType">
+	    <collection get-method="getOptions" set-method="setOptions" create-type="java.util.ArrayList">
+	      <structure name="option" type="uk.co.gregorydoran.plotxml.editor.xml_binding.OptionType" >
+	      	<value style="element" name="english" field="english"/>
+    		<value style="attribute" name="name" field="name"/>
+	      </structure>
+	    </collection>
+    </structure>
+    
+    <!-- Probabilities: -->
+    <structure field="probabilities" name="probabilities" type="uk.co.gregorydoran.plotxml.editor.xml_binding.ProbabilitiesType">
+    	<collection create-type="java.util.ArrayList" name="givens" field="givenList" />
+	    <collection create-type="java.util.ArrayList" name="prob" field="probList" />
+    </structure>
+  </mapping>
+  
+  <!-- Given: -->
+  <mapping name="given" class="uk.co.gregorydoran.plotxml.editor.xml_binding.GivenType">
+    <collection create-type="java.util.ArrayList" name="givens" field="givenList" />
+    <collection create-type="java.util.ArrayList" name="prob" field="probList" />
+    <value style="attribute" name="option_name" field="optionName" />
+  </mapping>
+  
+  <!-- Prob: -->
+  <mapping name="prob" class="uk.co.gregorydoran.plotxml.editor.xml_binding.ProbType">
+    <value style="attribute" name="option_name" field="optionName"/>
+    <value style="attribute" name="value" field="value"/>
+  </mapping>
+  
+</binding>

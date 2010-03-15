@@ -67,7 +67,7 @@ public class OptionsEditor extends JDialog implements ActionListener
 	}
 	else
 	{
-	    return (decision.getOptions().getOptions());
+	    return (options);
 	}
     }
 
@@ -139,7 +139,7 @@ public class OptionsEditor extends JDialog implements ActionListener
 
 	    // Load the data into the table.
 	    String[] content = new String[2];
-	    for (OptionType o : decision.getOptions().getOptions())
+	    for (OptionType o : options)
 	    {
 		content[0] = o.getName();
 		content[1] = o.getEnglish();
@@ -265,12 +265,13 @@ public class OptionsEditor extends JDialog implements ActionListener
 		public void actionPerformed(java.awt.event.ActionEvent e)
 		{
 		    // Update decision options.
-		    decision.getOptions().getOptions().clear();
+		    options.clear();
 		    for (int i = 0; i < tableData.getRowCount(); i++)
 		    {
 			OptionType o = new OptionType();
 			o.setName((String) tableData.getValueAt(i, 0));
 			o.setEnglish((String) tableData.getValueAt(i, 1));
+			options.add(o);
 		    }
 
 		    // Close the window.

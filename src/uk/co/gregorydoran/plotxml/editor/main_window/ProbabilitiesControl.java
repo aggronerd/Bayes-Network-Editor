@@ -43,7 +43,8 @@ public class ProbabilitiesControl extends JPanel
 
 	// Prepares the controls
 	int n = 0;
-	if (probabilities.getGivens().size() > 0)
+	if (probabilities.getGivens() != null
+		&& probabilities.getGivens().size() > 0)
 	{
 	    for (GivenType given : probabilities.getGivens())
 	    {
@@ -54,13 +55,15 @@ public class ProbabilitiesControl extends JPanel
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.weightx = 1.0;
+		gbc.insets = new Insets(10, 0, 10, 0);
 
 		this.add(getGivenPanel(given, dependencies), gbc);
 
 		n++;
 	    }
 	}
-	else if (probabilities.getProbs().size() > 0)
+	else if (probabilities.getProbs() != null
+		&& probabilities.getProbs().size() > 0)
 	{
 	    for (ProbType prob : probabilities.getProbs())
 	    {

@@ -16,16 +16,16 @@ import java.util.List;
  */
 public class DependenciesType
 {
-    private List<DecisionType> decisionList = new ArrayList<DecisionType>();
+    private List<DependencyType> dependencyList = new ArrayList<DependencyType>();
 
     /**
      * Get the list of 'decision' element items.
      * 
      * @return list
      */
-    public List<DecisionType> getDecisions()
+    public List<DependencyType> getDependencies()
     {
-	return decisionList;
+	return dependencyList;
     }
 
     /**
@@ -33,8 +33,23 @@ public class DependenciesType
      * 
      * @param list
      */
-    public void setDecisions(List<DecisionType> list)
+    public void setDependencies(List<DependencyType> list)
     {
-	decisionList = list;
+	dependencyList = list;
+    }
+
+    /**
+     * Returns a list of all the decisions included in the dependency.
+     * 
+     * @return
+     */
+    public List<DecisionType> getDecisions()
+    {
+	List<DecisionType> result = new ArrayList<DecisionType>();
+	for (DependencyType d : dependencyList)
+	{
+	    result.add(d.getDecision());
+	}
+	return (result);
     }
 }

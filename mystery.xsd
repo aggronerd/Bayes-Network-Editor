@@ -9,7 +9,7 @@
 
   <xs:complexType name="PlotType">
    	<xs:sequence>
-      <xs:element name="decisions" minOccurs="1" maxOccurs="unbounded" type="DecisionsType" />
+      <xs:element name="decisions" minOccurs="1" maxOccurs="1" type="DecisionsType" />
     </xs:sequence> 
     <xs:attribute name="name" type="xs:string"/>
   </xs:complexType>
@@ -68,7 +68,7 @@
 
   <xs:complexType name="DependenciesType">
   	<xs:sequence>
-  		<xs:element name="decision" type="xs:string" minOccurs="1" maxOccurs="unbounded"></xs:element>
+  		<xs:element name="dependency" type="dependencyType" minOccurs="1" maxOccurs="unbounded"></xs:element>
   	</xs:sequence>
   </xs:complexType>
 
@@ -102,5 +102,9 @@
   		<xs:maxInclusive value="1"></xs:maxInclusive>
   	</xs:restriction>
   </xs:simpleType>
+
+  <xs:complexType name="dependencyType">
+  	<xs:attribute name="decision" type="xs:string" use="required"></xs:attribute>
+  </xs:complexType>
 </xs:schema>
 

@@ -23,11 +23,11 @@ package uk.co.gregorydoran.plotxml.editor.xml_binding;
 public class DecisionType
 {
     protected String english;
-    protected DependenciesType dependencies;
-    protected OptionsType options;
-    protected ProbabilitiesType probabilities;
+    protected DependenciesType dependencies = new DependenciesType();
+    protected OptionsType options = new OptionsType();
+    protected ProbabilitiesType probabilities = new ProbabilitiesType();
     protected String name;
-    protected Type type;
+    protected String type;
 
     public DecisionType()
     {
@@ -145,7 +145,7 @@ public class DecisionType
      * 
      * @return value
      */
-    public Type getType()
+    public String getType()
     {
 	return type;
     }
@@ -157,7 +157,7 @@ public class DecisionType
      * 
      * @param type
      */
-    public void setType(Type type)
+    public void setType(String type)
     {
 	this.type = type;
     }
@@ -219,7 +219,7 @@ public class DecisionType
      */
     public void clearDependencies()
     {
-	dependencies.getDecisions().clear();
+	dependencies.getDependencies().clear();
     }
 
 }

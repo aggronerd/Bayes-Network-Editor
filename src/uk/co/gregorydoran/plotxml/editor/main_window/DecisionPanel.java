@@ -133,6 +133,8 @@ public class DecisionPanel extends JPanel implements ActionListener
 	if (jTextFieldName == null)
 	{
 	    jTextFieldName = new JTextField();
+	    jTextFieldName.addActionListener(this);
+	    jTextFieldName.setActionCommand("update_name_field");
 	}
 	return jTextFieldName;
     }
@@ -169,7 +171,14 @@ public class DecisionPanel extends JPanel implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e)
     {
-	editOptions();
+	if (e.getActionCommand().equals("edit_options"))
+	{
+
+	}
+	else if (e.getActionCommand().equals("update_name_field"))
+	{
+
+	}
     }
 
     /**
@@ -199,6 +208,10 @@ public class DecisionPanel extends JPanel implements ActionListener
 	if (newOptions != null)
 	{
 	    decision.getOptions().setOptions(newOptions);
+
+	    // TODO: Make cleverer.
+	    decision.updateDependencies(((MainWindow) getParentWindow())
+		    .getGraph());
 	}
 
     }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plot name="plot">
+   <decisions>
+      <decision name="decision2" type="String">
+         <english>Decision 2</english>
+         <dependencies/>
+         <options>
+            <option name="0">
+               <english>0</english>
+            </option>
+            <option name="1">
+               <english>1</english>
+            </option>
+         </options>
+         <probabilities>
+            <givens/>
+            <prob/>
+         </probabilities>
+      </decision>
+      <decision name="decision0" type="String">
+         <english>Decision 0</english>
+         <dependencies/>
+         <options>
+            <option name="0">
+               <english>0</english>
+            </option>
+            <option name="1">
+               <english>1</english>
+            </option>
+         </options>
+         <probabilities>
+            <givens/>
+            <prob/>
+         </probabilities>
+      </decision>
+      <decision name="decision1" type="String">
+         <english>Decision 1</english>
+         <dependencies/>
+         <options>
+            <option name="0">
+               <english>0</english>
+            </option>
+            <option name="1">
+               <english>1</english>
+            </option>
+         </options>
+         <probabilities>
+            <givens/>
+            <prob/>
+         </probabilities>
+      </decision>
+   </decisions>
+</plot>

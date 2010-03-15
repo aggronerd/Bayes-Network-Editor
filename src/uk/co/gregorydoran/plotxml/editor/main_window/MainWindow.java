@@ -9,14 +9,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 
 import org.apache.commons.collections15.Factory;
+import org.jibx.runtime.BindingDirectory;
+import org.jibx.runtime.IBindingFactory;
+import org.jibx.runtime.IMarshallingContext;
+import org.jibx.runtime.JiBXException;
 
 import uk.co.gregorydoran.plotxml.editor.Decision;
 import uk.co.gregorydoran.plotxml.editor.Dependency;
+import uk.co.gregorydoran.plotxml.editor.xml_binding.DecisionType;
+import uk.co.gregorydoran.plotxml.editor.xml_binding.PlotType;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.Graph;
@@ -64,7 +72,7 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 	this.setJMenuBar(menuBar);
 
 	// Setup DirectedGraph control
-	g = getGraph();
+	g = createNewGraph();
 	vertexFactory = new VertexFactory();
 	edgeFactory = new EdgeFactory();
 	vv = new VisualizationViewer<Decision, Dependency>(
@@ -106,7 +114,7 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 
     }
 
-    public Graph<Decision, Dependency> getGraph()
+    private Graph<Decision, Dependency> createNewGraph()
     {
 	Graph<Decision, Dependency> g = new DirectedSparseGraph<Decision, Dependency>();
 	/*
@@ -144,6 +152,10 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 	{
 	    vv.repaint();
 	}
+	if ("save".equals(e.getActionCommand()))
+	{
+	    saveNetworkAs("filename.xml");
+	}
     }
 
     @Override
@@ -166,4 +178,46 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 	}
     }
 
+    public Graph<Decision, Dependency> getGraph()
+    {
+	return (g);
+    }
+
+    public void saveNetworkAs(String filename)
+    {
+	PlotType plot = new PlotType();
+
+	// Add the dependencies from the graph.
+	for (Decision d : g.getVertices())
+	{
+	    plot.getDecisions().add((DecisionType) d);
+	}
+
+	// Set the plot name.
+	plot.setName("plot");
+
+	try
+	{
+	    IBindingFactory bfact = BindingDirectory.getFactory(PlotType.class);
+
+	    IMarshallingContext mctx = bfact.createMarshallingContext();
+
+	    mctx.setIndent(2);
+
+	    mctx.marshalDocument(plot, "UTF-8", null, new FileOutputStream(
+		    filename));
+	}
+	catch (JiBXException e)
+	{
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+
+	}
+	catch (FileNotFoundException e)
+	{
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+
+    }
 }
