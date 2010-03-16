@@ -17,7 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import uk.co.gregorydoran.plotxml.editor.Decision;
+import uk.co.gregorydoran.plotxml.editor.xml_binding.Decision;
 import uk.co.gregorydoran.plotxml.editor.xml_binding.OptionType;
 
 public class OptionsEditor extends JDialog implements ActionListener

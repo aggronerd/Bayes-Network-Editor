@@ -2,14 +2,14 @@ package uk.co.gregorydoran.plotxml.editor.xml_binding;
 
 public class DependencyType
 {
-    private DecisionType decision;
+    private Decision decision;
 
-    public DecisionType getDecision()
+    public Decision getDecision()
     {
 	return decision;
     }
 
-    public void setDecision(DecisionType d)
+    public void setDecision(Decision d)
     {
 	decision = d;
     }

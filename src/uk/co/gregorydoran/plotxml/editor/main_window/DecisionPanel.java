@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import uk.co.gregorydoran.plotxml.editor.Decision;
+import uk.co.gregorydoran.plotxml.editor.xml_binding.Decision;
 import uk.co.gregorydoran.plotxml.editor.xml_binding.OptionType;
 
 public class DecisionPanel extends JPanel implements ActionListener
@@ -101,6 +101,7 @@ public class DecisionPanel extends JPanel implements ActionListener
 	gbcOptionsField.gridy = 2;
 	gbcOptionsField.anchor = GridBagConstraints.WEST;
 	jButtonEditOptions.addActionListener(this);
+	jButtonEditOptions.setActionCommand("edit_options");
 	this.add(jButtonEditOptions, gbcOptionsField);
 
 	// Probabilities label
@@ -173,7 +174,7 @@ public class DecisionPanel extends JPanel implements ActionListener
     {
 	if (e.getActionCommand().equals("edit_options"))
 	{
-
+	    editOptions();
 	}
 	else if (e.getActionCommand().equals("update_name_field"))
 	{

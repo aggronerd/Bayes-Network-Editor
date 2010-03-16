@@ -7,7 +7,7 @@
   </mapping>
   
   <!-- Decision: -->
-  <mapping name="decision" class="uk.co.gregorydoran.plotxml.editor.xml_binding.DecisionType">
+  <mapping name="decision" class="uk.co.gregorydoran.plotxml.editor.xml_binding.Decision">
     <value style="attribute" name="name" field="name" ident="def"/>
     <value style="element" name="english" field="english"/>
     <value style="attribute" name="type" field="type"/>

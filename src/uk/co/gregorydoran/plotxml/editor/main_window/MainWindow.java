@@ -21,17 +21,19 @@ import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.IMarshallingContext;
 import org.jibx.runtime.JiBXException;
 
-import uk.co.gregorydoran.plotxml.editor.Decision;
 import uk.co.gregorydoran.plotxml.editor.Dependency;
-import uk.co.gregorydoran.plotxml.editor.xml_binding.DecisionType;
+import uk.co.gregorydoran.plotxml.editor.xml_binding.Decision;
 import uk.co.gregorydoran.plotxml.editor.xml_binding.PlotType;
-import edu.uci.ics.jung.algorithms.layout.FRLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout2;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.ObservableGraph;
+import edu.uci.ics.jung.graph.event.GraphEvent;
+import edu.uci.ics.jung.graph.event.GraphEventListener;
+import edu.uci.ics.jung.graph.util.Graphs;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
-import edu.uci.ics.jung.visualization.control.EditingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.PluggableGraphMouse;
 import edu.uci.ics.jung.visualization.control.RotatingGraphMousePlugin;
@@ -49,8 +51,10 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 
     private static final long serialVersionUID = 9118006988703782991L;
 
-    private Graph<Decision, Dependency> g;
-    private VisualizationViewer<Decision, Dependency> vv;
+    private Graph<Decision, Dependency> g = null;
+    private VisualizationViewer<Decision, Dependency> vv = null;
+    private FRLayout2<Decision, Dependency> layout = null;
+
     private MainWindowMenuBar menuBar;
     private GraphZoomScrollPane gzsp;
     private JSplitPane splitPane;
@@ -72,13 +76,18 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 	this.setJMenuBar(menuBar);
 
 	// Setup DirectedGraph control
-	g = createNewGraph();
+	createNewGraph();
+
+	layout = new FRLayout2<Decision, Dependency>(g);
+
+	vv = new VisualizationViewer<Decision, Dependency>(layout);
+
 	vertexFactory = new VertexFactory();
 	edgeFactory = new EdgeFactory();
-	vv = new VisualizationViewer<Decision, Dependency>(
-		new FRLayout<Decision, Dependency>(g));
+
 	vv.getRenderContext().setVertexLabelTransformer(
 		new ToStringLabeller<Decision>());
+
 	gzsp = new GraphZoomScrollPane(vv);
 
 	// Setup tools panel.
@@ -96,8 +105,8 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 		1.1f, 0.9f));
 	gm.add(new RotatingGraphMousePlugin(MouseEvent.BUTTON2_MASK
 		+ MouseEvent.SHIFT_MASK));
-	gm.add(new EditingGraphMousePlugin<Decision, Dependency>(
-		MouseEvent.CTRL_MASK, vertexFactory, edgeFactory));
+	gm.add(new FixedEditingGraphMousePlugin(MouseEvent.CTRL_MASK,
+		vertexFactory, edgeFactory));
 	gm.add(new PickingGraphMousePlugin<Decision, Dependency>());
 	vv.setGraphMouse(gm);
 	vv.setBackground(Color.white);
@@ -114,9 +123,43 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 
     }
 
-    private Graph<Decision, Dependency> createNewGraph()
+    private void createNewGraph()
     {
-	Graph<Decision, Dependency> g = new DirectedSparseGraph<Decision, Dependency>();
+	Graph<Decision, Dependency> newGraph = Graphs
+		.<Decision, Dependency> synchronizedDirectedGraph(new DirectedSparseGraph<Decision, Dependency>());
+
+	ObservableGraph<Decision, Dependency> newObservableGraph = new ObservableGraph<Decision, Dependency>(
+		newGraph);
+
+	// Setup the listener
+	newObservableGraph
+		.addGraphEventListener(new GraphEventListener<Decision, Dependency>()
+		{
+		    public void handleGraphEvent(
+			    GraphEvent<Decision, Dependency> graphEvent)
+		    {
+			// An edge is added.
+			if (graphEvent.getType() == GraphEvent.Type.EDGE_ADDED)
+			{
+
+			    // TODO: Check for circular references.
+
+			    // Update target probabilities
+			    graphEvent
+				    .getSource()
+				    .getDest(
+					    ((GraphEvent.Edge<Decision, Dependency>) graphEvent)
+						    .getEdge())
+				    .updateDependencies(graphEvent.getSource());
+			}
+		    }
+
+		});
+
+	g = newObservableGraph;
+
+	System.out.println(g.getClass());
+
 	/*
 	 * PlotType obj = null;
 	 * 
@@ -138,7 +181,6 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 	 * Auto-generated catch block e.printStackTrace(); }
 	 */
 
-	return (g);
     }
 
     @Override
@@ -176,6 +218,10 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 	    // Makes sure everything fits.
 	    splitPane.getRightComponent().validate();
 	}
+	if (subject instanceof Dependency)
+	{
+
+	}
     }
 
     public Graph<Decision, Dependency> getGraph()
@@ -190,7 +236,7 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 	// Add the dependencies from the graph.
 	for (Decision d : g.getVertices())
 	{
-	    plot.getDecisions().add((DecisionType) d);
+	    plot.getDecisions().add((Decision) d);
 	}
 
 	// Set the plot name.

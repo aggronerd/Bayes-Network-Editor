@@ -5,8 +5,8 @@ import java.util.EventListener;
 
 import javax.swing.JPanel;
 
-import uk.co.gregorydoran.plotxml.editor.Decision;
 import uk.co.gregorydoran.plotxml.editor.Dependency;
+import uk.co.gregorydoran.plotxml.editor.xml_binding.Decision;
 import edu.uci.ics.jung.graph.Graph;
 
 /**
@@ -37,10 +37,6 @@ public class NodePanel extends JPanel implements EventListener
 
 	if (activeDecision != null)
 	{
-	    // TODO: change this so it's only called when changes have been made
-	    // to the dependencies or options of dependent decisions.
-	    activeDecision.updateDependencies(activeGraph);
-
 	    reloadControls();
 	}
 	else

@@ -9,7 +9,7 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import uk.co.gregorydoran.plotxml.editor.xml_binding.DecisionType;
+import uk.co.gregorydoran.plotxml.editor.xml_binding.Decision;
 import uk.co.gregorydoran.plotxml.editor.xml_binding.GivenType;
 import uk.co.gregorydoran.plotxml.editor.xml_binding.ProbType;
 import uk.co.gregorydoran.plotxml.editor.xml_binding.ProbabilitiesType;
@@ -33,7 +33,7 @@ public class ProbabilitiesControl extends JPanel
      * This is the default constructor
      */
     public ProbabilitiesControl(ProbabilitiesType p,
-	    List<DecisionType> dependencies)
+	    List<Decision> dependencies)
     {
 	super();
 
@@ -92,14 +92,14 @@ public class ProbabilitiesControl extends JPanel
      * @return
      */
     private JPanel getGivenPanel(GivenType given,
-	    List<DecisionType> dependencies)
+	    List<Decision> dependencies)
     {
 	JPanel panel = new JPanel();
 	panel.setLayout(new GridBagLayout());
 
 	// Detach the first dependency from the list
-	DecisionType dependency = dependencies.get(0);
-	dependencies = new ArrayList<DecisionType>(dependencies);
+	Decision dependency = dependencies.get(0);
+	dependencies = new ArrayList<Decision>(dependencies);
 	dependencies.remove(0);
 
 	int n = 0;

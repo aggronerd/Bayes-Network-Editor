@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class PlotType
 {
-    private List<DecisionType> decisions = new ArrayList<DecisionType>();
+    private List<Decision> decisions = new ArrayList<Decision>();
     private String name;
 
     /**
@@ -25,7 +25,7 @@ public class PlotType
      * 
      * @return list
      */
-    public List<DecisionType> getDecisions()
+    public List<Decision> getDecisions()
     {
 	return decisions;
     }
@@ -35,7 +35,7 @@ public class PlotType
      * 
      * @param list
      */
-    public void setDecisions(List<DecisionType> d)
+    public void setDecisions(List<Decision> d)
     {
 	decisions = d;
     }

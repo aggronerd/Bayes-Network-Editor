@@ -2,7 +2,7 @@ package uk.co.gregorydoran.plotxml.editor.main_window;
 
 import org.apache.commons.collections15.Factory;
 
-import uk.co.gregorydoran.plotxml.editor.Decision;
+import uk.co.gregorydoran.plotxml.editor.xml_binding.Decision;
 
 class VertexFactory implements Factory<Decision>
 {
