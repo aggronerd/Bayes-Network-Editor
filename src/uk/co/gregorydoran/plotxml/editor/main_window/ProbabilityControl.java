@@ -8,10 +8,15 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 
+import org.apache.log4j.Logger;
+
 import uk.co.gregorydoran.plotxml.editor.xml_binding.ProbType;
 
-public class OptionProbControl extends JPanel
+public class ProbabilityControl extends JPanel
 {
+
+    private static final Logger log = Logger
+	    .getLogger(ProbabilityControl.class); // @jve:decl-index=0:
 
     private static final long serialVersionUID = 1L;
     private JLabel jLabel = null;
@@ -25,9 +30,13 @@ public class OptionProbControl extends JPanel
     /**
      * This is the default constructor
      */
-    public OptionProbControl(ProbType p)
+    public ProbabilityControl(ProbType p)
     {
 	super();
+	log.debug("Contructor called for ProbType: " + p.toString());
+	log.debug("ProbType values: optionName=" + p.getOptionName()
+		+ " value=" + p.getValue());
+
 	probType = p;
 	initialize();
 
@@ -36,7 +45,7 @@ public class OptionProbControl extends JPanel
 	jTextField.setText(String.valueOf(probType.getValue()));
 	jSlider
 		.setValue(Math
-			.round(jSlider.getMaximum() / probType.getValue()));
+			.round(jSlider.getMaximum() * probType.getValue()));
     }
 
     /**
@@ -120,7 +129,7 @@ public class OptionProbControl extends JPanel
 
 			// Update the slider bar control.
 			jSlider.setValue(Math.round(jSlider.getMaximum()
-				/ probType.getValue()));
+				* probType.getValue()));
 
 		    }
 		    catch (NumberFormatException err)

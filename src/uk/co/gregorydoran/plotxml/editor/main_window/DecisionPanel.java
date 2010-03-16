@@ -5,6 +5,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -14,11 +16,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import org.apache.log4j.Logger;
+
 import uk.co.gregorydoran.plotxml.editor.xml_binding.Decision;
 import uk.co.gregorydoran.plotxml.editor.xml_binding.OptionType;
 
-public class DecisionPanel extends JPanel implements ActionListener
+public class DecisionPanel extends JPanel implements ActionListener,
+	KeyListener
 {
+
+    private static final Logger log = Logger.getLogger(DecisionPanel.class);
 
     private static final long serialVersionUID = 1L;
     private JLabel jLabelName = null;
@@ -36,6 +43,7 @@ public class DecisionPanel extends JPanel implements ActionListener
     public DecisionPanel(Decision d)
     {
 	super();
+	log.debug("Contructor called. d=" + d);
 	decision = d;
 	this.setLayout(new GridBagLayout());
 	initialize();
@@ -134,8 +142,7 @@ public class DecisionPanel extends JPanel implements ActionListener
 	if (jTextFieldName == null)
 	{
 	    jTextFieldName = new JTextField();
-	    jTextFieldName.addActionListener(this);
-	    jTextFieldName.setActionCommand("update_name_field");
+	    jTextFieldName.addKeyListener(this);
 	}
 	return jTextFieldName;
     }
@@ -176,10 +183,6 @@ public class DecisionPanel extends JPanel implements ActionListener
 	{
 	    editOptions();
 	}
-	else if (e.getActionCommand().equals("update_name_field"))
-	{
-
-	}
     }
 
     /**
@@ -213,6 +216,30 @@ public class DecisionPanel extends JPanel implements ActionListener
 	    // TODO: Make cleverer.
 	    decision.updateDependencies(((MainWindow) getParentWindow())
 		    .getGraph());
+	}
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent arg0)
+    {
+	// TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent arg0)
+    {
+	// TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e)
+    {
+	if (e.getSource().equals(jTextFieldName))
+	{
+
 	}
 
     }

@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="libs/wstx-asl-3.2.6.jar"/>
 	<classpathentry kind="lib" path="libs/jibx-run.jar"/>
 	<classpathentry kind="lib" path="libs/xpp3.jar"/>
+	<classpathentry kind="lib" path="libs/log4j-1.2.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

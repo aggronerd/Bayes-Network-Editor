@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 
 import org.apache.commons.collections15.Factory;
+import org.apache.log4j.Logger;
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.IMarshallingContext;
@@ -49,6 +50,8 @@ import edu.uci.ics.jung.visualization.picking.PickedState;
 public class MainWindow extends JFrame implements ActionListener, ItemListener
 {
 
+    private static final Logger log = Logger.getLogger(MainWindow.class);
+
     private static final long serialVersionUID = 9118006988703782991L;
 
     private Graph<Decision, Dependency> g = null;
@@ -70,6 +73,8 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
     public MainWindow()
     {
 	super("Plot XML Editor");
+
+	log.debug("Contructor called");
 
 	// Load menu bar.
 	menuBar = new MainWindowMenuBar(this);

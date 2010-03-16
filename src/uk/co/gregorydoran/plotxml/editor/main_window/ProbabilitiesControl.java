@@ -75,7 +75,7 @@ public class ProbabilitiesControl extends JPanel
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.weightx = 1.0;
 
-		this.add(new OptionProbControl(prob), gbc);
+		this.add(new ProbabilityControl(prob), gbc);
 
 		n++;
 	    }
@@ -143,7 +143,7 @@ public class ProbabilitiesControl extends JPanel
 		childGbc.weightx = 1.0;
 
 		// Add prob control.
-		panel.add(new OptionProbControl(p), childGbc);
+		panel.add(new ProbabilityControl(p), childGbc);
 
 		n++;
 	    }

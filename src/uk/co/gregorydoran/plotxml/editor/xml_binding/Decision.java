@@ -42,6 +42,7 @@ public class Decision
 	this.options.getOptions().add(new OptionType("0"));
 	this.options.getOptions().add(new OptionType("1"));
 	dependencies = new DependenciesType();
+	updateDependencies();
     }
 
     /**
@@ -258,7 +259,9 @@ public class Decision
 	{
 	    for (Decision d : collection)
 	    {
-		dependencies.getDecisions().add(d);
+		DependencyType dep = new DependencyType();
+		dep.setDecision(d);
+		dependencies.getDependencies().add(dep);
 	    }
 	    // Update probability elements
 
@@ -267,17 +270,25 @@ public class Decision
 	}
 	else
 	{
-	    // There are no dependencies so we just add the probabilities for
-	    // the options for this decision.
-	    for (OptionType o : this.getOptions().getOptions())
-	    {
-		ProbType p = new ProbType();
-		p.setValue(1.0f / this.getOptions().getOptions().size());
-		p.setOptionName(o.getName());
-		getProbabilities().getProbs().add(p);
-	    }
+	    updateDependencies();
 	}
 
+    }
+
+    /**
+     * Assumes that this Decision is not dependent on any others.
+     */
+    public void updateDependencies()
+    {
+	// There are no dependencies so we just add the probabilities for
+	// the options for this decision.
+	for (OptionType o : this.getOptions().getOptions())
+	{
+	    ProbType p = new ProbType();
+	    p.setValue(1.0f / this.getOptions().getOptions().size());
+	    p.setOptionName(o.getName());
+	    getProbabilities().getProbs().add(p);
+	}
     }
 
     /**
@@ -300,9 +311,10 @@ public class Decision
 	// branching structure we don't want to break the list.
 	decisionsLeft = new ArrayList<Decision>(decisionsLeft);
 
+	List<GivenType> result = new ArrayList<GivenType>();
+
 	if (decisionsLeft.size() > 0)
 	{
-	    List<GivenType> result = new ArrayList<GivenType>();
 
 	    // Grab the first decision.
 	    Decision first = decisionsLeft.get(0);
@@ -321,7 +333,7 @@ public class Decision
 		// there's no more to add.
 		g.setGivens(getNewGivens(decisionsLeft));
 
-		if (g.getGivens() == null)
+		if (g.getGivens().size() == 0)
 		{
 		    // This was the last call to this function which means we're
 		    // at the lowest given tag, thus we add the probabilities
@@ -341,13 +353,12 @@ public class Decision
 
 		result.add(g);
 	    }
-
-	    return result;
 	}
 	else
 	{
-	    return (null);
 	}
+
+	return result;
     }
 
 }
