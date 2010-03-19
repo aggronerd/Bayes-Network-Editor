@@ -33,15 +33,15 @@
     
     <!-- Probabilities: -->
     <structure field="probabilities" name="probabilities" type="uk.co.gregorydoran.plotxml.editor.xml_binding.ProbabilitiesType">
-    	<collection create-type="java.util.ArrayList" name="givens" field="givenList" />
-	    <collection create-type="java.util.ArrayList" name="probs" field="probList" />
+    	<collection create-type="java.util.ArrayList" field="givenList" />
+	    <collection create-type="java.util.ArrayList" field="probList" />
     </structure>
   </mapping>
   
   <!-- Given: -->
   <mapping name="given" class="uk.co.gregorydoran.plotxml.editor.xml_binding.GivenType">
-    <collection create-type="java.util.ArrayList" name="givens" field="givenList" />
-    <collection create-type="java.util.ArrayList" name="probs" field="probList" />
+    <collection create-type="java.util.ArrayList" field="givenList" />
+    <collection create-type="java.util.ArrayList" field="probList" />
     <value style="attribute" name="option_name" field="optionName" />
   </mapping>
   

@@ -1,13 +1,13 @@
 package uk.co.gregorydoran.plotxml.editor.main_window;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,6 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import org.apache.log4j.Logger;
 
@@ -22,7 +24,7 @@ import uk.co.gregorydoran.plotxml.editor.xml_binding.Decision;
 import uk.co.gregorydoran.plotxml.editor.xml_binding.OptionType;
 
 public class DecisionPanel extends JPanel implements ActionListener,
-	KeyListener
+	DocumentListener
 {
 
     private static final Logger log = Logger.getLogger(DecisionPanel.class);
@@ -142,7 +144,7 @@ public class DecisionPanel extends JPanel implements ActionListener,
 	if (jTextFieldName == null)
 	{
 	    jTextFieldName = new JTextField();
-	    jTextFieldName.addKeyListener(this);
+	    jTextFieldName.getDocument().addDocumentListener(this);
 	}
 	return jTextFieldName;
     }
@@ -157,6 +159,7 @@ public class DecisionPanel extends JPanel implements ActionListener,
 	if (jTextAreaQuestion == null)
 	{
 	    jTextAreaQuestion = new JTextArea();
+	    jTextAreaQuestion.getDocument().addDocumentListener(this);
 	}
 	return jTextAreaQuestion;
     }
@@ -182,6 +185,22 @@ public class DecisionPanel extends JPanel implements ActionListener,
 	if (e.getActionCommand().equals("edit_options"))
 	{
 	    editOptions();
+	}
+	if (e.getSource().equals(jTextFieldName))
+	{
+	    // Validate input for decision name
+	    if (Pattern.matches("[a-zA-Z\\d\\_]+", jTextFieldName.getText()))
+	    {
+		jTextFieldName.setBackground(Color.WHITE);
+		// If it's valid update the object
+		decision.setName(jTextFieldName.getText());
+
+	    }
+	    else
+	    {
+		jTextFieldName.setBackground(Color.RED);
+	    }
+
 	}
     }
 
@@ -221,26 +240,61 @@ public class DecisionPanel extends JPanel implements ActionListener,
     }
 
     @Override
-    public void keyPressed(KeyEvent arg0)
+    public void changedUpdate(DocumentEvent e)
     {
-	// TODO Auto-generated method stub
-
     }
 
     @Override
-    public void keyReleased(KeyEvent arg0)
+    public void insertUpdate(DocumentEvent e)
     {
-	// TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e)
-    {
-	if (e.getSource().equals(jTextFieldName))
+	if (e.getDocument().equals(jTextFieldName.getDocument()))
 	{
-
+	    validateAndUpdateName();
 	}
-
+	else if (e.getDocument().equals(jTextAreaQuestion.getDocument()))
+	{
+	    validateAndUpdateQuestion();
+	}
     }
+
+    private void validateAndUpdateQuestion()
+    {
+	log.debug("jTextAreaQuestion changed");
+	decision.setEnglish(jTextAreaQuestion.getText());
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e)
+    {
+	if (e.getDocument().equals(jTextFieldName.getDocument()))
+	{
+	    validateAndUpdateName();
+	}
+	else if (e.getDocument().equals(jTextAreaQuestion.getDocument()))
+	{
+	    validateAndUpdateQuestion();
+	}
+    }
+
+    private void validateAndUpdateName()
+    {
+	log.debug("jTextFieldName changed");
+
+	// Validate input for decision name
+	if (Pattern.matches("[a-zA-Z\\d\\_]+", jTextFieldName.getText()))
+	{
+	    jTextFieldName.setBackground(Color.WHITE);
+	    // If it's valid update the object
+	    decision.setName(jTextFieldName.getText());
+	    if (this.getRootPane() != null)
+	    {
+		this.getRootPane().repaint();
+	    }
+	}
+	else
+	{
+	    jTextFieldName.setBackground(Color.RED);
+	}
+    }
+
 }

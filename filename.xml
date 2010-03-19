@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plot name="plot">
   <decisions>
-    <decision name="decision2" type="String">
-      <english>Decision 2</english>
+    <decision name="decision3" type="String">
+      <english>Decision 3</english>
       <dependencies>
-        <dependency>
-          <decision>decision1</decision>
-        </dependency>
+        <dependency decision="decision2"/>
       </dependencies>
       <options>
-        <option name="0">
+        <option name="decision3.0">
           <english>0</english>
         </option>
         <option name="1">
@@ -17,42 +15,14 @@
         </option>
       </options>
       <probabilities>
-        <givens>
-          <given option_name="0">
-            <givens/>
-            <probs>
-              <prob option_name="0" value="0.5"/>
-              <prob option_name="1" value="0.5"/>
-            </probs>
-          </given>
-          <given option_name="1">
-            <givens/>
-            <probs>
-              <prob option_name="0" value="0.5"/>
-              <prob option_name="1" value="0.5"/>
-            </probs>
-          </given>
-        </givens>
-        <probs/>
-      </probabilities>
-    </decision>
-    <decision name="decision1" type="String">
-      <english>Decision 1</english>
-      <dependencies/>
-      <options>
-        <option name="0">
-          <english>0</english>
-        </option>
-        <option name="1">
-          <english>1</english>
-        </option>
-      </options>
-      <probabilities>
-        <givens/>
-        <probs>
+        <given option_name="0">
           <prob option_name="0" value="0.5"/>
           <prob option_name="1" value="0.5"/>
-        </probs>
+        </given>
+        <given option_name="1">
+          <prob option_name="0" value="0.5"/>
+          <prob option_name="1" value="0.5"/>
+        </given>
       </probabilities>
     </decision>
     <decision name="decision0" type="String">
@@ -67,20 +37,103 @@
         </option>
       </options>
       <probabilities>
-        <givens/>
-        <probs>
-          <prob option_name="0" value="0.5"/>
-          <prob option_name="1" value="0.5"/>
-        </probs>
+        <prob option_name="0" value="0.5"/>
+        <prob option_name="1" value="0.5"/>
+      </probabilities>
+    </decision>
+    <decision name="decision1" type="String">
+      <english>Decision 1</english>
+      <dependencies>
+        <dependency decision="decision0"/>
+        <dependency decision="decision4"/>
+      </dependencies>
+      <options>
+        <option name="0">
+          <english>0</english>
+        </option>
+        <option name="1">
+          <english>1</english>
+        </option>
+      </options>
+      <probabilities>
+        <given option_name="0">
+          <given option_name="0">
+            <prob option_name="0" value="0.5"/>
+            <prob option_name="1" value="0.5"/>
+          </given>
+          <given option_name="1">
+            <prob option_name="0" value="0.5"/>
+            <prob option_name="1" value="0.5"/>
+          </given>
+        </given>
+        <given option_name="1">
+          <given option_name="0">
+            <prob option_name="0" value="0.5"/>
+            <prob option_name="1" value="0.5"/>
+          </given>
+          <given option_name="1">
+            <prob option_name="0" value="0.5"/>
+            <prob option_name="1" value="0.5"/>
+          </given>
+        </given>
+      </probabilities>
+    </decision>
+    <decision name="decision2" type="String">
+      <english>Decision 2</english>
+      <dependencies>
+        <dependency decision="decision1"/>
+        <dependency decision="decision5"/>
+      </dependencies>
+      <options>
+        <option name="0">
+          <english>0</english>
+        </option>
+        <option name="1">
+          <english>1</english>
+        </option>
+      </options>
+      <probabilities>
+        <given option_name="0">
+          <given option_name="0">
+            <prob option_name="0" value="0.5"/>
+            <prob option_name="1" value="0.5"/>
+          </given>
+          <given option_name="1">
+            <prob option_name="0" value="0.5"/>
+            <prob option_name="1" value="0.5"/>
+          </given>
+        </given>
+        <given option_name="1">
+          <given option_name="0">
+            <prob option_name="0" value="0.5"/>
+            <prob option_name="1" value="0.5"/>
+          </given>
+          <given option_name="1">
+            <prob option_name="0" value="0.5"/>
+            <prob option_name="1" value="0.5"/>
+          </given>
+        </given>
+      </probabilities>
+    </decision>
+    <decision name="decision5" type="String">
+      <english>Decision 5</english>
+      <dependencies/>
+      <options>
+        <option name="0">
+          <english>0</english>
+        </option>
+        <option name="1">
+          <english>1</english>
+        </option>
+      </options>
+      <probabilities>
+        <prob option_name="0" value="0.5"/>
+        <prob option_name="1" value="0.5"/>
       </probabilities>
     </decision>
     <decision name="decision4" type="String">
       <english>Decision 4</english>
-      <dependencies>
-        <dependency>
-          <decision>decision1</decision>
-        </dependency>
-      </dependencies>
+      <dependencies/>
       <options>
         <option name="0">
           <english>0</english>
@@ -90,136 +143,8 @@
         </option>
       </options>
       <probabilities>
-        <givens>
-          <given option_name="0">
-            <givens/>
-            <probs>
-              <prob option_name="0" value="0.5"/>
-              <prob option_name="1" value="0.5"/>
-            </probs>
-          </given>
-          <given option_name="1">
-            <givens/>
-            <probs>
-              <prob option_name="0" value="0.5"/>
-              <prob option_name="1" value="0.5"/>
-            </probs>
-          </given>
-        </givens>
-        <probs/>
-      </probabilities>
-    </decision>
-    <decision name="decision3" type="String">
-      <english>Decision 3</english>
-      <dependencies>
-        <dependency>
-          <decision>decision2</decision>
-        </dependency>
-        <dependency>
-          <decision>decision0</decision>
-        </dependency>
-        <dependency>
-          <decision>decision4</decision>
-        </dependency>
-      </dependencies>
-      <options>
-        <option name="0">
-          <english>0</english>
-        </option>
-        <option name="1">
-          <english>1</english>
-        </option>
-      </options>
-      <probabilities>
-        <givens>
-          <given option_name="0">
-            <givens>
-              <given option_name="0">
-                <givens>
-                  <given option_name="0">
-                    <givens/>
-                    <probs>
-                      <prob option_name="0" value="0.5"/>
-                      <prob option_name="1" value="0.5"/>
-                    </probs>
-                  </given>
-                  <given option_name="1">
-                    <givens/>
-                    <probs>
-                      <prob option_name="0" value="0.5"/>
-                      <prob option_name="1" value="0.5"/>
-                    </probs>
-                  </given>
-                </givens>
-                <probs/>
-              </given>
-              <given option_name="1">
-                <givens>
-                  <given option_name="0">
-                    <givens/>
-                    <probs>
-                      <prob option_name="0" value="0.5"/>
-                      <prob option_name="1" value="0.5"/>
-                    </probs>
-                  </given>
-                  <given option_name="1">
-                    <givens/>
-                    <probs>
-                      <prob option_name="0" value="0.5"/>
-                      <prob option_name="1" value="0.5"/>
-                    </probs>
-                  </given>
-                </givens>
-                <probs/>
-              </given>
-            </givens>
-            <probs/>
-          </given>
-          <given option_name="1">
-            <givens>
-              <given option_name="0">
-                <givens>
-                  <given option_name="0">
-                    <givens/>
-                    <probs>
-                      <prob option_name="0" value="0.5"/>
-                      <prob option_name="1" value="0.5"/>
-                    </probs>
-                  </given>
-                  <given option_name="1">
-                    <givens/>
-                    <probs>
-                      <prob option_name="0" value="0.5"/>
-                      <prob option_name="1" value="0.5"/>
-                    </probs>
-                  </given>
-                </givens>
-                <probs/>
-              </given>
-              <given option_name="1">
-                <givens>
-                  <given option_name="0">
-                    <givens/>
-                    <probs>
-                      <prob option_name="0" value="0.5"/>
-                      <prob option_name="1" value="0.5"/>
-                    </probs>
-                  </given>
-                  <given option_name="1">
-                    <givens/>
-                    <probs>
-                      <prob option_name="0" value="0.5"/>
-                      <prob option_name="1" value="0.5"/>
-                    </probs>
-                  </given>
-                </givens>
-                <probs/>
-              </given>
-            </givens>
-            <probs/>
-          </given>
-        </givens>
-        <probs/>
+        <prob option_name="0" value="0.5"/>
+        <prob option_name="1" value="0.5"/>
       </probabilities>
     </decision>
   </decisions>
