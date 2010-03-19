@@ -32,8 +32,7 @@ public class ProbabilitiesControl extends JPanel
     /**
      * This is the default constructor
      */
-    public ProbabilitiesControl(ProbabilitiesType p,
-	    List<Decision> dependencies)
+    public ProbabilitiesControl(ProbabilitiesType p, List<Decision> dependencies)
     {
 	super();
 
@@ -91,8 +90,7 @@ public class ProbabilitiesControl extends JPanel
      * @param dependencies
      * @return
      */
-    private JPanel getGivenPanel(GivenType given,
-	    List<Decision> dependencies)
+    private JPanel getGivenPanel(GivenType given, List<Decision> dependencies)
     {
 	JPanel panel = new JPanel();
 	panel.setLayout(new GridBagLayout());
@@ -152,7 +150,7 @@ public class ProbabilitiesControl extends JPanel
 
 	// Create a label for the option.
 	JLabel optionLabel = new JLabel(dependency.getName() + " = "
-		+ given.getOptionName());
+		+ given.getOption().getName());
 
 	// Set Constraints.
 	GridBagConstraints gbc1 = new GridBagConstraints();

@@ -17,15 +17,41 @@ public class OptionType
 {
     private String english;
     private String name;
+    private long id;
+
+    private static long nextID = 0;
+
+    public long getID()
+    {
+	return (id);
+    }
+
+    private void generateID()
+    {
+	id = nextID;
+	nextID++;
+    }
 
     public OptionType(String name_value)
     {
 	name = name_value;
 	english = name_value;
+	generateID();
     }
 
     public OptionType()
     {
+	generateID();
+    }
+
+    public void setPath(String newPath)
+    {
+    }
+
+    public String getPath()
+    {
+	// At the minute just returns an ID
+	return (String.valueOf(this.getID()));
     }
 
     /**

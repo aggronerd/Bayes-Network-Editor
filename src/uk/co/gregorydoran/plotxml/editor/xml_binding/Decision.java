@@ -286,7 +286,7 @@ public class Decision
 	{
 	    ProbType p = new ProbType();
 	    p.setValue(1.0f / this.getOptions().getOptions().size());
-	    p.setOptionName(o.getName());
+	    p.setOption(o);
 	    getProbabilities().getProbs().add(p);
 	}
     }
@@ -327,7 +327,7 @@ public class Decision
 	    {
 		// There are still more dependencies to add elements for.
 		GivenType g = new GivenType();
-		g.setOptionName(o.getName());
+		g.setOption(o);
 
 		// May set it to null, but we don't mind, because that means
 		// there's no more to add.
@@ -343,7 +343,7 @@ public class Decision
 		    for (OptionType myOption : this.getOptions().getOptions())
 		    {
 			ProbType p = new ProbType();
-			p.setOptionName(myOption.getName());
+			p.setOption(myOption);
 			p
 				.setValue(1.0f / this.getOptions().getOptions()
 					.size());

@@ -16,7 +16,7 @@ public class GivenType
 {
     private List<GivenType> givenList = new ArrayList<GivenType>();
     private List<ProbType> probList = new ArrayList<ProbType>();
-    private String optionName;
+    private OptionType option;
 
     /**
      * Get the list of 'given' element items.
@@ -59,22 +59,23 @@ public class GivenType
     }
 
     /**
-     * Get the 'option_name' attribute value.
+     * Get the 'option' attribute value.
      * 
      * @return value
      */
-    public String getOptionName()
+    public OptionType getOption()
     {
-	return optionName;
+	return option;
     }
 
     /**
      * Set the 'option_name' attribute value.
      * 
-     * @param optionName
+     * @param o
+     *            The option.
      */
-    public void setOptionName(String optionName)
+    public void setOption(OptionType o)
     {
-	this.optionName = optionName;
+	this.option = o;
     }
 }

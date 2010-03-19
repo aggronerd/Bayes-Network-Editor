@@ -22,12 +22,8 @@
     </structure>
     
     <!-- Options: -->
-    <structure field="options" name="options" type="uk.co.gregorydoran.plotxml.editor.xml_binding.OptionsType">
+    <structure field="options" name="options" type="uk.co.gregorydoran.plotxml.editor.xml_binding.OptionsType" pre-set="setDecision"> 
 	    <collection get-method="getOptions" set-method="setOptions" create-type="java.util.ArrayList">
-	      <structure name="option" type="uk.co.gregorydoran.plotxml.editor.xml_binding.OptionType" >
-	      	<value style="element" name="english" field="english"/>
-    		<value style="attribute" name="name" field="name"/>
-	      </structure>
 	    </collection>
     </structure>
     
@@ -38,17 +34,24 @@
     </structure>
   </mapping>
   
+  <!-- Option: -->
+  <mapping name="option" class="uk.co.gregorydoran.plotxml.editor.xml_binding.OptionType">
+    <value style="element" name="english" field="english" />
+    <value style="attribute" name="name" get-method="getPath" set-method="setName" ident="def"/>
+  </mapping>
+  
+  
   <!-- Given: -->
   <mapping name="given" class="uk.co.gregorydoran.plotxml.editor.xml_binding.GivenType">
     <collection create-type="java.util.ArrayList" field="givenList" />
     <collection create-type="java.util.ArrayList" field="probList" />
-    <value style="attribute" name="option_name" field="optionName" />
+    <value style="attribute" name="option_id" field="option" ident="ref" />
   </mapping>
   
   <!-- Prob: -->
   <mapping name="prob" class="uk.co.gregorydoran.plotxml.editor.xml_binding.ProbType">
-    <value style="attribute" name="option_name" field="optionName"/>
-    <value style="attribute" name="value" field="value"/>
+    <value style="attribute" name="option_id" field="option" ident="ref" />
+    <value style="attribute" name="value" field="value" />
   </mapping>
   
 </binding>

@@ -9,10 +9,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 
 import org.apache.commons.collections15.Factory;
@@ -20,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.IMarshallingContext;
+import org.jibx.runtime.IUnmarshallingContext;
 import org.jibx.runtime.JiBXException;
 
 import uk.co.gregorydoran.plotxml.editor.Dependency;
@@ -47,32 +52,40 @@ import edu.uci.ics.jung.visualization.picking.PickedState;
  * @author Gregory Doran <me@gregorydoran.co.uk>
  * 
  */
-public class MainWindow extends JFrame implements ActionListener, ItemListener
+public class MainWindow extends JFrame implements ActionListener, ItemListener,
+	GraphEventListener<Decision, Dependency>
 {
 
     private static final Logger log = Logger.getLogger(MainWindow.class);
 
     private static final long serialVersionUID = 9118006988703782991L;
 
+    // Jung objects
     private Graph<Decision, Dependency> g = null;
-    private VisualizationViewer<Decision, Dependency> vv = null;
     private FRLayout2<Decision, Dependency> layout = null;
 
-    private MainWindowMenuBar menuBar;
-    private GraphZoomScrollPane gzsp;
-    private JSplitPane splitPane;
-    private NodePanel nodePanel;
-    private PickedState<Decision> pickedState;
+    // GUI Controls
+    private VisualizationViewer<Decision, Dependency> vv = null;
+    private MainWindowMenuBar menuBar = null;
+    private GraphZoomScrollPane gzsp = null;
+    private JSplitPane splitPane = null;
+    private NodePanel nodePanel = null;
+    private PickedState<Decision> pickedState = null;
 
-    private Factory<Decision> vertexFactory;
-    private Factory<Dependency> edgeFactory;
+    // Factories
+    private Factory<Decision> vertexFactory = null;
+    private Factory<Dependency> edgeFactory = null;
+
+    // Plot
+    private PlotType currentPlot = null;
+    private boolean plotSaved = false;
 
     /**
      * Creates the window and controls.
      */
     public MainWindow()
     {
-	super("Plot XML Editor");
+	super("Belief Network Editor");
 
 	log.debug("Contructor called");
 
@@ -80,20 +93,95 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 	menuBar = new MainWindowMenuBar(this);
 	this.setJMenuBar(menuBar);
 
-	// Setup DirectedGraph control
-	createNewGraph();
+	// Create a new plot
+	createNewPlot();
 
-	layout = new FRLayout2<Decision, Dependency>(g);
+	splitPane.setDividerLocation(550);
 
-	vv = new VisualizationViewer<Decision, Dependency>(layout);
+	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	this.setVisible(true);
+	this.pack();
 
+    }
+
+    /**
+     * Creates a new plot to replace the current one and updates all the
+     * controls.
+     */
+    public void createNewPlot()
+    {
+	currentPlot = new PlotType();
+	currentPlot.setName("New Network");
+	refreshTitle();
+
+	// Factories used for creation of graph objects
 	vertexFactory = new VertexFactory();
 	edgeFactory = new EdgeFactory();
 
+	// Setup new graph and controls
+	resetControls();
+
+	plotSaved = false;
+    }
+
+    /**
+     * Resets the title to include the plot object's name.
+     */
+    private void refreshTitle()
+    {
+	this.setTitle("Plot Belief Network Editor - " + currentPlot.getName());
+    }
+
+    /**
+     * Creates new controls for the current plot.
+     * 
+     */
+    private void resetControls()
+    {
+	this.setVisible(false);
+
+	// Removes all existing.
+	log.debug("Removing all existing components");
+	if (splitPane != null)
+	{
+	    this.remove(splitPane);
+	}
+	if (splitPane != null)
+	{
+	    splitPane.removeAll();
+	}
+	if (gzsp != null)
+	{
+	    gzsp.removeAll();
+	}
+	if (vv != null)
+	{
+	    vv.removeAll();
+	}
+	if (nodePanel != null)
+	{
+	    nodePanel.removeAll();
+	}
+
+	// Create the directed graph and wrap in the observable graph class.
+	Graph<Decision, Dependency> newGraph = Graphs
+		.<Decision, Dependency> synchronizedDirectedGraph(new DirectedSparseGraph<Decision, Dependency>());
+	ObservableGraph<Decision, Dependency> newObservableGraph = new ObservableGraph<Decision, Dependency>(
+		newGraph);
+
+	// Setup this class as the listener.
+	newObservableGraph.addGraphEventListener(this);
+
+	g = newObservableGraph;
+
+	// Create the actual control
+	layout = new FRLayout2<Decision, Dependency>(g);
+	vv = new VisualizationViewer<Decision, Dependency>(layout);
 	vv.getRenderContext().setVertexLabelTransformer(
 		new ToStringLabeller<Decision>());
-
 	gzsp = new GraphZoomScrollPane(vv);
+
+	log.debug("New graph and visualisation created.");
 
 	// Setup tools panel.
 	nodePanel = new NodePanel(g);
@@ -101,9 +189,8 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 	// Setup horizontal split.
 	splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, gzsp, nodePanel);
 	splitPane.setOneTouchExpandable(true);
-	splitPane.setDividerLocation(550);
 
-	// Create a graph mouse and add it to the visualization component
+	// Create a graph mouse and add it to the visualisation component
 	PluggableGraphMouse gm = new PluggableGraphMouse();
 	gm.add(new TranslatingGraphMousePlugin(MouseEvent.BUTTON2_MASK));
 	gm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0,
@@ -116,95 +203,89 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 	vv.setGraphMouse(gm);
 	vv.setBackground(Color.white);
 
-	// Setup listener for picking.
+	// Setup listener for picking
 	pickedState = vv.getPickedVertexState();
 	pickedState.addItemListener(this);
 
 	this.getContentPane().add(splitPane);
 
-	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	this.setVisible(true);
-	this.pack();
-
     }
 
-    private void createNewGraph()
-    {
-	Graph<Decision, Dependency> newGraph = Graphs
-		.<Decision, Dependency> synchronizedDirectedGraph(new DirectedSparseGraph<Decision, Dependency>());
-
-	ObservableGraph<Decision, Dependency> newObservableGraph = new ObservableGraph<Decision, Dependency>(
-		newGraph);
-
-	// Setup the listener
-	newObservableGraph
-		.addGraphEventListener(new GraphEventListener<Decision, Dependency>()
-		{
-		    public void handleGraphEvent(
-			    GraphEvent<Decision, Dependency> graphEvent)
-		    {
-			// An edge is added.
-			if (graphEvent.getType() == GraphEvent.Type.EDGE_ADDED)
-			{
-
-			    // TODO: Check for circular references.
-
-			    // Update target probabilities
-			    graphEvent
-				    .getSource()
-				    .getDest(
-					    ((GraphEvent.Edge<Decision, Dependency>) graphEvent)
-						    .getEdge())
-				    .updateDependencies(graphEvent.getSource());
-			}
-		    }
-
-		});
-
-	g = newObservableGraph;
-
-	System.out.println(g.getClass());
-
-	/*
-	 * PlotType obj = null;
-	 * 
-	 * IBindingFactory bfact; try {
-	 * 
-	 * bfact = BindingDirectory.getFactory(PlotType.class); // TODO
-	 * Auto-generated catch block
-	 * 
-	 * //Load the XML file IMarshallingContext mctx = null;
-	 * 
-	 * mctx = bfact.createMarshallingContext();
-	 * 
-	 * 
-	 * mctx.marshalDocument(obj, "UTF-8", null, new
-	 * FileOutputStream("filename.xml"));
-	 * 
-	 * } catch (FileNotFoundException e) { // TODO Auto-generated catch
-	 * block e.printStackTrace(); } catch (JiBXException e) { // TODO
-	 * Auto-generated catch block e.printStackTrace(); }
-	 */
-
-    }
-
+    /**
+     * Captures when an action is performed in the menu bar or buttons in the
+     * window.
+     * 
+     */
     @Override
     public void actionPerformed(ActionEvent e)
     {
+
 	if ("exit".equals(e.getActionCommand()))
 	{
 	    System.exit(0);
 	}
-	if ("add_decision".equals(e.getActionCommand()))
+
+	else if ("rename_plot".equals(e.getActionCommand()))
 	{
-	    vv.repaint();
+	    String newName = JOptionPane.showInputDialog(this, "Plot name:",
+		    this.getCurrentPlot().getName());
+
+	    // Test the new plot title.
+	    if (newName != null && newName.trim() != "")
+	    {
+		this.getCurrentPlot().setName(newName);
+
+		// Title displays name of the plot.
+		refreshTitle();
+	    }
 	}
-	if ("save".equals(e.getActionCommand()))
+
+	else if ("save".equals(e.getActionCommand()))
 	{
 	    saveNetworkAs("filename.xml");
 	}
+
+	else if ("new_plot".equals(e.getActionCommand()))
+	{
+	    if ((plotSaved != true)
+		    && (JOptionPane
+			    .showConfirmDialog(
+				    this,
+				    "Changes have not been saved. Are you sure you want to do this?",
+				    "New Plot", JOptionPane.YES_NO_OPTION) != 0))
+	    {
+		return;
+	    }
+	    createNewPlot();
+	}
+
+	else if ("open_plot".equals(e.getActionCommand()))
+	{
+	    JFileChooser fc = new JFileChooser();
+
+	    int returnVal = fc.showOpenDialog(this);
+
+	    if (returnVal == JFileChooser.APPROVE_OPTION)
+	    {
+		File file = fc.getSelectedFile();
+		log.debug("Opening: " + file.getName());
+
+		this.openNetwork(file.getName());
+	    }
+	    else
+	    {
+		log.debug("Open command cancelled by user");
+	    }
+
+	}
+
     }
 
+    /**
+     * Captures item state changes from the graph's verteces and edges.
+     * 
+     */
     @Override
     public void itemStateChanged(ItemEvent e)
     {
@@ -229,23 +310,30 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 	}
     }
 
+    /**
+     * Returns the current graph.
+     * 
+     * @return
+     */
     public Graph<Decision, Dependency> getGraph()
     {
 	return (g);
     }
 
+    /**
+     * Saves the XML file for the current graph in the filename specified.
+     * 
+     * @param filename
+     */
     public void saveNetworkAs(String filename)
     {
-	PlotType plot = new PlotType();
 
 	// Add the dependencies from the graph.
+	currentPlot.getDecisions().clear();
 	for (Decision d : g.getVertices())
 	{
-	    plot.getDecisions().add((Decision) d);
+	    currentPlot.getDecisions().add((Decision) d);
 	}
-
-	// Set the plot name.
-	plot.setName("plot");
 
 	try
 	{
@@ -255,8 +343,8 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 
 	    mctx.setIndent(2);
 
-	    mctx.marshalDocument(plot, "UTF-8", null, new FileOutputStream(
-		    filename));
+	    mctx.marshalDocument(currentPlot, "UTF-8", null,
+		    new FileOutputStream(filename));
 	}
 	catch (JiBXException e)
 	{
@@ -270,5 +358,84 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener
 	    e.printStackTrace();
 	}
 
+	plotSaved = true;
+
+    }
+
+    /**
+     * Opens the file specified in the filename string.
+     * 
+     * @param filename
+     */
+    public void openNetwork(String filename)
+    {
+	// Prepare binding objects.
+	IBindingFactory bfact;
+
+	try
+	{
+	    bfact = BindingDirectory.getFactory(PlotType.class);
+	    IUnmarshallingContext umctx;
+	    umctx = bfact.createUnmarshallingContext();
+
+	    // Load the objects from the xml file
+	    currentPlot = (PlotType) umctx.unmarshalDocument(new FileReader(
+		    new File(filename)));
+
+	    // Add decisions found in the file to the graph.
+	    for (Decision d : currentPlot.getDecisions())
+	    {
+		g.addVertex(d);
+	    }
+
+	    // Link the decisions.
+	    for (Decision d : currentPlot.getDecisions())
+	    {
+		for (Decision dependency : d.getDependencies().getDecisions())
+		{
+		    g.addEdge(new Dependency(), dependency, d);
+		}
+	    }
+
+	    // Reset the graph and objects.
+	    resetControls();
+
+	}
+	catch (FileNotFoundException e)
+	{
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	catch (JiBXException e)
+	{
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+    }
+
+    /**
+     * Handles events from the graph.
+     */
+    @Override
+    public void handleGraphEvent(GraphEvent<Decision, Dependency> graphEvent)
+    {
+	// An edge is added.
+	if (graphEvent.getType() == GraphEvent.Type.EDGE_ADDED)
+	{
+
+	    // TODO: Check for circular references.
+
+	    // Update target probabilities
+	    graphEvent.getSource().getDest(
+		    ((GraphEvent.Edge<Decision, Dependency>) graphEvent)
+			    .getEdge()).updateDependencies(
+		    graphEvent.getSource());
+	}
+
+    }
+
+    public PlotType getCurrentPlot()
+    {
+	return (currentPlot);
     }
 }

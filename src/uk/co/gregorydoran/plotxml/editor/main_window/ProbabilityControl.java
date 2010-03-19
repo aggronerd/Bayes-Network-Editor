@@ -34,14 +34,14 @@ public class ProbabilityControl extends JPanel
     {
 	super();
 	log.debug("Contructor called for ProbType: " + p.toString());
-	log.debug("ProbType values: optionName=" + p.getOptionName()
+	log.debug("ProbType values: optionName=" + p.getOption().getName()
 		+ " value=" + p.getValue());
 
 	probType = p;
 	initialize();
 
 	// Sets the initial values of the controls
-	jLabel.setText(probType.getOptionName());
+	jLabel.setText(probType.getOption().getName());
 	jTextField.setText(String.valueOf(probType.getValue()));
 	jSlider
 		.setValue(Math

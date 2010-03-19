@@ -19,7 +19,7 @@ public class MainWindowMenuBar extends JMenuBar
     private JMenuItem menuItemOpen;
 
     private JMenu menuEdit;
-    private JMenuItem menuAddDecision;
+    private JMenuItem menuItemRenamePlot;
     private JMenuItem menuItemCut;
     private JMenuItem menuItemCopy;
     private JMenuItem menuItemPaste;
@@ -36,6 +36,7 @@ public class MainWindowMenuBar extends JMenuBar
 
 	menuItemNew = new JMenuItem("New");
 	menuItemNew.addActionListener((ActionListener) mainWindow);
+	menuItemNew.setActionCommand("new_plot");
 	menuFile.add(menuItemNew);
 
 	menuFile.addSeparator();
@@ -53,6 +54,7 @@ public class MainWindowMenuBar extends JMenuBar
 
 	menuItemOpen = new JMenuItem("Open...");
 	menuItemOpen.addActionListener((ActionListener) mainWindow);
+	menuItemOpen.setActionCommand("open_plot");
 	menuFile.add(menuItemOpen);
 
 	menuFile.addSeparator();
@@ -66,10 +68,10 @@ public class MainWindowMenuBar extends JMenuBar
 	menuEdit = new JMenu("Edit");
 	this.add(menuEdit);
 
-	menuAddDecision = new JMenuItem("Add Decision");
-	menuAddDecision.addActionListener((ActionListener) mainWindow);
-	menuAddDecision.setActionCommand("add_decision");
-	menuEdit.add(menuAddDecision);
+	menuItemRenamePlot = new JMenuItem("Rename Plot");
+	menuItemRenamePlot.addActionListener((ActionListener) mainWindow);
+	menuItemRenamePlot.setActionCommand("rename_plot");
+	menuEdit.add(menuItemRenamePlot);
 
 	menuEdit.addSeparator();
 
