@@ -365,7 +365,7 @@ public class Decision
 			p
 				.setValue(1.0f / this.getOptions().getOptions()
 					.size());
-			g.getProb().add(p);
+			g.getProbs().add(p);
 		    }
 		}
 

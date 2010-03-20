@@ -3,7 +3,6 @@ package uk.co.gregorydoran.plotxml.editor.main_window;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
@@ -19,7 +18,6 @@ public class ProbabilityControl extends JPanel
 	    .getLogger(ProbabilityControl.class); // @jve:decl-index=0:
 
     private static final long serialVersionUID = 1L;
-    private JLabel jLabel = null;
     private JSlider jSlider = null;
     private JTextField jTextField = null;
 
@@ -41,7 +39,6 @@ public class ProbabilityControl extends JPanel
 	initialize();
 
 	// Sets the initial values of the controls
-	jLabel.setText(probType.getOption().getName());
 	jTextField.setText(String.valueOf(probType.getValue()));
 	jSlider
 		.setValue(Math
@@ -68,13 +65,7 @@ public class ProbabilityControl extends JPanel
 	gridBagConstraints1.gridy = 1;
 	gridBagConstraints1.weightx = 2.0;
 	gridBagConstraints1.gridx = 1;
-	GridBagConstraints gridBagConstraints = new GridBagConstraints();
-	gridBagConstraints.gridx = 0;
-	gridBagConstraints.gridy = 1;
-	jLabel = new JLabel();
-	jLabel.setText("option");
 	this.setLayout(new GridBagLayout());
-	this.add(jLabel, gridBagConstraints);
 	this.add(getJSlider(), gridBagConstraints1);
 	this.add(getJTextField(), gridBagConstraints2);
     }

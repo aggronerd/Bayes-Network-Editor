@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 
 import uk.co.gregorydoran.plotxml.editor.xml_binding.Decision;
 import uk.co.gregorydoran.plotxml.editor.xml_binding.GivenType;
@@ -40,25 +41,51 @@ public class ProbabilitiesControl extends JPanel
 
 	this.setLayout(new GridBagLayout());
 
-	// Prepares the controls
+	int baseX = 1, baseY = 1; // The current root grid positions
 	int n = 0;
+	int i = 0;
+
+	// Prepares the header labels
+	for (Decision d : dependencies)
+	{
+	    GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.gridx = baseX + i;
+	    gbc.gridy = baseY;
+	    gbc.fill = GridBagConstraints.BOTH;
+	    gbc.anchor = GridBagConstraints.WEST;
+	    gbc.weightx = 1.0;
+	    gbc.insets = new Insets(10, 0, 10, 0);
+	    this.add(new JLabel("Given " + d.getName(), JLabel.CENTER), gbc);
+	    i++;
+	}
+	GridBagConstraints gbc = new GridBagConstraints();
+	gbc.gridx = baseX + i;
+	gbc.gridy = baseY;
+	gbc.fill = GridBagConstraints.BOTH;
+	gbc.anchor = GridBagConstraints.WEST;
+	gbc.weightx = 1.0;
+	gbc.insets = new Insets(10, 0, 10, 0);
+	this.add(new JLabel("Option", JLabel.CENTER), gbc);
+	i++;
+	gbc = new GridBagConstraints();
+	gbc.gridx = baseX + i;
+	gbc.gridy = baseY;
+	gbc.fill = GridBagConstraints.BOTH;
+	gbc.anchor = GridBagConstraints.WEST;
+	gbc.weightx = 1.0;
+	gbc.insets = new Insets(10, 0, 10, 0);
+	this.add(new JLabel("Probability", JLabel.CENTER), gbc);
+
+	baseY++;
+
+	// Prepares the controls
 	if (probabilities.getGivens() != null
 		&& probabilities.getGivens().size() > 0)
 	{
 	    for (GivenType given : probabilities.getGivens())
 	    {
-		// Set constraints
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = n;
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.anchor = GridBagConstraints.EAST;
-		gbc.weightx = 1.0;
-		gbc.insets = new Insets(10, 0, 10, 0);
-
-		this.add(getGivenPanel(given, dependencies), gbc);
-
-		n++;
+		n = traverseGiven(given, dependencies, baseX, baseY);
+		baseY += n;
 	    }
 	}
 	else if (probabilities.getProbs() != null
@@ -66,16 +93,7 @@ public class ProbabilitiesControl extends JPanel
 	{
 	    for (ProbType prob : probabilities.getProbs())
 	    {
-		// Set constraints
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = n;
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.anchor = GridBagConstraints.EAST;
-		gbc.weightx = 1.0;
-
-		this.add(new ProbabilityControl(prob), gbc);
-
+		displayProb(prob, baseX, baseY + n);
 		n++;
 	    }
 	}
@@ -83,87 +101,91 @@ public class ProbabilitiesControl extends JPanel
 
     /**
      * 
-     * Recursive function which returns a JPanel control with probabilities for
-     * the supplied GivenType.
-     * 
      * @param given
      * @param dependencies
-     * @return
+     * @param baseX
+     *            The x value of the gridbag
+     * @param baseY
+     * @return An integer expressing the vertical cells of the grid box layout
+     *         used.
      */
-    private JPanel getGivenPanel(GivenType given, List<Decision> dependencies)
+    private int traverseGiven(GivenType given, List<Decision> dependencies,
+	    int baseX, int baseY)
     {
-	JPanel panel = new JPanel();
-	panel.setLayout(new GridBagLayout());
+	GridBagConstraints gbc = null;
 
 	// Detach the first dependency from the list
-	Decision dependency = dependencies.get(0);
 	dependencies = new ArrayList<Decision>(dependencies);
 	dependencies.remove(0);
 
-	int n = 0;
+	int n = 0; // Rows added by this function in this instance
 
 	// Add child controls
 	if (given.getGivens() != null && given.getGivens().size() > 0)
 	{
-
 	    for (GivenType g : given.getGivens())
 	    {
-		// Setup constraints for child control.
-		GridBagConstraints childGbc = new GridBagConstraints();
-		childGbc.gridx = 1;
-		childGbc.gridy = n;
-		childGbc.fill = GridBagConstraints.BOTH;
-		childGbc.anchor = GridBagConstraints.WEST;
-		childGbc.weightx = 1.0;
+		int nGiven = 0; // Rows add by this given
 
-		// Adds vertical padding between prob. groups:
-		if (g.getProb().size() > 0)
-		{
-		    childGbc.insets = new Insets(10, 0, 10, 0);
-		}
+		// Recursive call
+		nGiven += traverseGiven(g, dependencies, baseX + 1, baseY + n);
 
-		// Add new panel.
-		panel.add(getGivenPanel(g, dependencies), childGbc);
-
-		n++;
+		n += nGiven;
 	    }
 	}
-	else if (given.getProb() != null && given.getProb().size() > 0)
+	else if (given.getProbs() != null && given.getProbs().size() > 0)
 	{
-	    for (ProbType p : given.getProb())
+	    // Insert horizontal separator
+	    JSeparator sep = new JSeparator();
+	    gbc = new GridBagConstraints();
+	    gbc.gridx = baseX;
+	    gbc.gridy = baseY + n;
+	    gbc.gridwidth = 3;
+	    gbc.fill = GridBagConstraints.BOTH;
+	    gbc.anchor = GridBagConstraints.WEST;
+	    gbc.weightx = 1.0;
+	    this.add(sep, gbc);
+	    n++;
+
+	    for (ProbType p : given.getProbs())
 	    {
-		// Setup constraints for child control.
-		GridBagConstraints childGbc = new GridBagConstraints();
-		childGbc.gridx = 1;
-		childGbc.gridy = n;
-		childGbc.fill = GridBagConstraints.BOTH;
-		childGbc.anchor = GridBagConstraints.WEST;
-		childGbc.weightx = 1.0;
-
-		// Add prob control.
-		panel.add(new ProbabilityControl(p), childGbc);
-
+		displayProb(p, baseX + 1, baseY + n);
 		n++;
 	    }
-
 	}
+	// Draw label for this option
+	gbc = new GridBagConstraints();
+	gbc.gridx = baseX;
+	gbc.gridy = baseY;
+	gbc.gridheight = n;
+	gbc.fill = GridBagConstraints.BOTH;
+	gbc.anchor = GridBagConstraints.WEST;
+	gbc.weightx = 1.0;
+	this.add(new JLabel(given.getOption().getName(), JLabel.CENTER), gbc);
 
-	// Create a label for the option.
-	JLabel optionLabel = new JLabel(dependency.getName() + " = "
-		+ given.getOption().getName());
+	return (n);
 
-	// Set Constraints.
-	GridBagConstraints gbc1 = new GridBagConstraints();
-	gbc1.gridx = 0;
-	gbc1.gridy = 0;
-	gbc1.gridheight = n + 1;
-	gbc1.fill = GridBagConstraints.HORIZONTAL;
-	gbc1.anchor = GridBagConstraints.WEST;
-	gbc1.weightx = 0.0;
+    }
 
-	panel.add(optionLabel, gbc1);
+    private void displayProb(ProbType prob, int baseX, int baseY)
+    {
+	// Add label for this option
+	GridBagConstraints labelGBC = new GridBagConstraints();
+	labelGBC.gridx = baseX;
+	labelGBC.gridy = baseY;
+	labelGBC.fill = GridBagConstraints.BOTH;
+	labelGBC.anchor = GridBagConstraints.WEST;
+	labelGBC.weightx = 1.0;
+	this.add(new JLabel(prob.getOption().getName(), JLabel.CENTER),
+		labelGBC);
 
-	return (panel);
-
+	// Add probability control.
+	GridBagConstraints probGBC = new GridBagConstraints();
+	probGBC.gridx = baseX + 1;
+	probGBC.gridy = baseY;
+	probGBC.fill = GridBagConstraints.BOTH;
+	probGBC.anchor = GridBagConstraints.WEST;
+	probGBC.weightx = 1.0;
+	this.add(new ProbabilityControl(prob), probGBC);
     }
 }

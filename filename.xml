@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plot name="New Network">
+  <decisions>
+    <decision name="decision0" type="String">
+      <english/>
+      <dependencies>
+        <dependency decision="decision1"/>
+        <dependency decision="decision2"/>
+      </dependencies>
+      <options>
+        <option name="0" path="decision0.0"/>
+        <option name="1" path="decision0.1"/>
+      </options>
+      <probabilities>
+        <given option="decision1.0">
+          <given option="decision2.0">
+            <prob option="decision0.0" value="0.5"/>
+            <prob option="decision0.1" value="0.5"/>
+          </given>
+          <given option="decision2.1">
+            <prob option="decision0.0" value="0.5"/>
+            <prob option="decision0.1" value="0.5"/>
+          </given>
+        </given>
+        <given option="decision1.1">
+          <given option="decision2.0">
+            <prob option="decision0.0" value="0.5"/>
+            <prob option="decision0.1" value="0.5"/>
+          </given>
+          <given option="decision2.1">
+            <prob option="decision0.0" value="0.5"/>
+            <prob option="decision0.1" value="0.5"/>
+          </given>
+        </given>
+      </probabilities>
+    </decision>
+    <decision name="decision1" type="String">
+      <english/>
+      <dependencies/>
+      <options>
+        <option name="0" path="decision1.0"/>
+        <option name="1" path="decision1.1"/>
+      </options>
+      <probabilities>
+        <prob option="decision1.0" value="0.5"/>
+        <prob option="decision1.1" value="0.5"/>
+      </probabilities>
+    </decision>
+    <decision name="decision2" type="String">
+      <english/>
+      <dependencies/>
+      <options>
+        <option name="0" path="decision2.0"/>
+        <option name="1" path="decision2.1"/>
+      </options>
+      <probabilities>
+        <prob option="decision2.0" value="0.5"/>
+        <prob option="decision2.1" value="0.5"/>
+      </probabilities>
+    </decision>
+  </decisions>
+</plot>

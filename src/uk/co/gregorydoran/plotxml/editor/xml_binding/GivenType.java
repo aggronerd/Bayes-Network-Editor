@@ -43,7 +43,7 @@ public class GivenType
      * 
      * @return value
      */
-    public List<ProbType> getProb()
+    public List<ProbType> getProbs()
     {
 	return probList;
     }

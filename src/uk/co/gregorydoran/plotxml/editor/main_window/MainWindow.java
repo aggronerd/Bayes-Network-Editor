@@ -79,6 +79,7 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
     // Plot
     private PlotType currentPlot = null;
     private boolean plotSaved = false;
+    private String plotFilename = null;
 
     /**
      * Creates the window and controls.
@@ -244,6 +245,26 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 	else if ("save".equals(e.getActionCommand()))
 	{
 	    saveNetworkAs("filename.xml");
+	}
+
+	else if ("save_as".equals(e.getActionCommand()))
+	{
+	    JFileChooser fc = new JFileChooser();
+
+	    int returnVal = fc.showSaveDialog(this);
+
+	    if (returnVal == JFileChooser.APPROVE_OPTION)
+	    {
+		File file = fc.getSelectedFile();
+		log.debug("Opening: " + file.getName());
+
+		this.openNetwork(file.getName());
+	    }
+	    else
+	    {
+		log.debug("Open command cancelled by user");
+	    }
+
 	}
 
 	else if ("new_plot".equals(e.getActionCommand()))
