@@ -22,14 +22,12 @@ public class OptionType
     public OptionType(String nameValue, OptionsType parentOptions)
     {
 	name = nameValue;
-	english = nameValue;
 	parent = parentOptions;
     }
 
     public OptionType(String name_value)
     {
 	name = name_value;
-	english = name_value;
     }
 
     public OptionType()
@@ -53,7 +51,6 @@ public class OptionType
 
     public String getPath()
     {
-	// At the minute just returns an ID
 	return (this.getParent().getParent().getName() + "." + this.getName());
     }
 

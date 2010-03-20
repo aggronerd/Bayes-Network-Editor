@@ -122,13 +122,7 @@ public class DecisionPanel extends JPanel implements ActionListener,
 	this.add(jLabelProbabilities, gbcProbabilitiesLabel);
 
 	// Probabilities field
-	GridBagConstraints gbcProbabilitiesField = new GridBagConstraints();
-	gbcProbabilitiesField.gridx = 0;
-	gbcProbabilitiesField.gridy = 4;
-	gbcProbabilitiesField.gridwidth = 2;
-	gbcProbabilitiesField.weightx = 1.0;
-	gbcProbabilitiesField.fill = GridBagConstraints.BOTH;
-	this.add(getProbPanel(), gbcProbabilitiesField);
+	reloadProbPanel();
 
     }
 
@@ -226,7 +220,13 @@ public class DecisionPanel extends JPanel implements ActionListener,
 
 	optionsEditorDialog.setVisible(true);
 
+	// Reload the controls to reflect any changes.
+	reloadProbPanel();
+
 	this.getRootPane().repaint();
+
+	// TODO: Need to figure out what can be put here to redraw the new prob
+	// controls.
     }
 
     @Override
@@ -285,6 +285,25 @@ public class DecisionPanel extends JPanel implements ActionListener,
 	{
 	    jTextFieldName.setBackground(Color.RED);
 	}
+    }
+
+    private void reloadProbPanel()
+    {
+	// Remove any existing version.
+	if (probPanel != null)
+	{
+	    this.remove(probPanel);
+	    probPanel = null;
+	}
+
+	// Update with the latest.
+	GridBagConstraints gbcProbabilitiesField = new GridBagConstraints();
+	gbcProbabilitiesField.gridx = 0;
+	gbcProbabilitiesField.gridy = 4;
+	gbcProbabilitiesField.gridwidth = 2;
+	gbcProbabilitiesField.weightx = 1.0;
+	gbcProbabilitiesField.fill = GridBagConstraints.BOTH;
+	this.add(getProbPanel(), gbcProbabilitiesField);
     }
 
 }

@@ -252,14 +252,11 @@ public class Decision
      */
     public void updateDependencies(Graph<Decision, Dependency> g)
     {
-	// Clear existing dependencies
+	// Clear existing dependencies.
 	clearDependencies();
 
 	// Update with ones from the graph.
 	Collection<Decision> collection = g.getPredecessors(this);
-
-	setProbabilities(new ProbabilitiesType());
-
 	if (collection.size() > 0)
 	{
 	    for (Decision d : collection)
@@ -268,31 +265,34 @@ public class Decision
 		dep.setDecision(d);
 		dependencies.getDependencies().add(dep);
 	    }
-
-	    // Update probability elements
-	    getProbabilities().setGivens(
-		    getNewGivens(getDependencies().getDecisions()));
 	}
-	else
-	{
-	    updateProbabilities();
-	}
-
     }
 
     /**
-     * Assumes that this Decision is not dependent on any others.
+     * 
      */
     public void updateProbabilities()
     {
-	// There are no dependencies so we just add the probabilities for
-	// the options for this decision.
-	for (OptionType o : this.getOptions().getOptions())
+	// Clear existing probabilities.
+	setProbabilities(new ProbabilitiesType());
+
+	if (this.getDependencies().getDecisions().size() > 0)
 	{
-	    ProbType p = new ProbType();
-	    p.setValue(1.0f / this.getOptions().getOptions().size());
-	    p.setOption(o);
-	    getProbabilities().getProbs().add(p);
+	    // Update probability elements
+	    getProbabilities().setGivens(
+		    getNewGivens(this.getDependencies().getDecisions()));
+	}
+	else
+	{
+	    // There are no dependencies so we just add the probabilities for
+	    // the options for this decision.
+	    for (OptionType o : this.getOptions().getOptions())
+	    {
+		ProbType p = new ProbType();
+		p.setValue(1.0f / this.getOptions().getOptions().size());
+		p.setOption(o);
+		getProbabilities().getProbs().add(p);
+	    }
 	}
     }
 
@@ -305,7 +305,7 @@ public class Decision
 	Collection<Decision> collection = g.getSuccessors(this);
 	for (Decision d : collection)
 	{
-	    d.updateDependencies(g);
+	    d.updateProbabilities();
 	}
     }
 

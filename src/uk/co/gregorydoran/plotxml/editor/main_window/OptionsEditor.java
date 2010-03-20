@@ -167,7 +167,12 @@ public class OptionsEditor extends JDialog implements ActionListener
 		    decision.getOptions().getOptions().add(newOption);
 		    refreshTable();
 
-		    // TODO: Add call to update recidual givens.
+		    // Updates the probabilities element.
+		    decision.updateProbabilities();
+
+		    // Update all residual decisions.
+		    decision.updateAllDependant(((MainWindow) getParent())
+			    .getGraph());
 		}
 	    });
 	}
@@ -196,7 +201,11 @@ public class OptionsEditor extends JDialog implements ActionListener
 				jTableOptions.getSelectedRow());
 			refreshTable();
 
-			decision.updateDependencies(((MainWindow) getParent())
+			// Updates the probabilities element.
+			decision.updateProbabilities();
+
+			// Update all residual decisions.
+			decision.updateAllDependant(((MainWindow) getParent())
 				.getGraph());
 		    }
 		}

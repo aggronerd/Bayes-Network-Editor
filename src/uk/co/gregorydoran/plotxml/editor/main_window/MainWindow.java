@@ -430,11 +430,16 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 
 	    // TODO: Check for circular references.
 
-	    // Update target probabilities
+	    // Update target dependencies
 	    graphEvent.getSource().getDest(
 		    ((GraphEvent.Edge<Decision, Dependency>) graphEvent)
 			    .getEdge()).updateDependencies(
 		    graphEvent.getSource());
+
+	    // Update target probabilities
+	    graphEvent.getSource().getDest(
+		    ((GraphEvent.Edge<Decision, Dependency>) graphEvent)
+			    .getEdge()).updateProbabilities();
 	}
 
     }

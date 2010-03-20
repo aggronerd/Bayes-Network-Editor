@@ -13,7 +13,7 @@ class VertexFactory implements Factory<Decision>
     {
 	Decision d = new Decision();
 	d.setName("decision" + i.toString());
-	d.setEnglish("Decision " + i.toString());
+	d.setEnglish("");
 	d.setType("String");
 	i++;
 	return d;
