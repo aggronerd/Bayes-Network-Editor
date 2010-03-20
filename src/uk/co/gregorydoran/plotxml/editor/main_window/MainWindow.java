@@ -382,6 +382,10 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 	    currentPlot = (PlotType) umctx.unmarshalDocument(new FileReader(
 		    new File(filename)));
 
+	    // Reset the graph and objects.
+	    resetControls();
+	    refreshTitle();
+
 	    // Add decisions found in the file to the graph.
 	    for (Decision d : currentPlot.getDecisions())
 	    {
@@ -397,8 +401,9 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 		}
 	    }
 
-	    // Reset the graph and objects.
-	    resetControls();
+	    layout.reset();
+
+	    this.repaint();
 
 	}
 	catch (FileNotFoundException e)

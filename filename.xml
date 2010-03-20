@@ -1,121 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plot name="New Network">
   <decisions>
-    <decision name="decision4" type="String">
-      <english>Decision 4</english>
-      <dependencies/>
-      <options>
-        <option name="8">
-          <english>0</english>
-        </option>
-        <option name="9">
-          <english>1</english>
-        </option>
-      </options>
-      <probabilities>
-        <prob option_id="8" value="0.5"/>
-        <prob option_id="9" value="0.5"/>
-      </probabilities>
-    </decision>
     <decision name="decision0" type="String">
       <english>Decision 0</english>
       <dependencies/>
       <options>
-        <option name="0">
+        <option name="0" path="decision0.0">
           <english>0</english>
         </option>
-        <option name="1">
+        <option name="1" path="decision0.1">
           <english>1</english>
         </option>
       </options>
       <probabilities>
-        <prob option_id="0" value="0.5"/>
-        <prob option_id="1" value="0.5"/>
-      </probabilities>
-    </decision>
-    <decision name="decision2" type="String">
-      <english>Decision 2</english>
-      <dependencies>
-        <dependency decision="decision4"/>
-        <dependency decision="decision0"/>
-        <dependency decision="decision3"/>
-      </dependencies>
-      <options>
-        <option name="4">
-          <english>0</english>
-        </option>
-        <option name="5">
-          <english>1</english>
-        </option>
-      </options>
-      <probabilities>
-        <given option_id="8">
-          <given option_id="0">
-            <given option_id="6">
-              <prob option_id="4" value="0.5"/>
-              <prob option_id="5" value="0.5"/>
-            </given>
-            <given option_id="7">
-              <prob option_id="4" value="0.5"/>
-              <prob option_id="5" value="0.5"/>
-            </given>
-          </given>
-          <given option_id="1">
-            <given option_id="6">
-              <prob option_id="4" value="0.5"/>
-              <prob option_id="5" value="0.5"/>
-            </given>
-            <given option_id="7">
-              <prob option_id="4" value="0.5"/>
-              <prob option_id="5" value="0.5"/>
-            </given>
-          </given>
-        </given>
-        <given option_id="9">
-          <given option_id="0">
-            <given option_id="6">
-              <prob option_id="4" value="0.5"/>
-              <prob option_id="5" value="0.5"/>
-            </given>
-            <given option_id="7">
-              <prob option_id="4" value="0.5"/>
-              <prob option_id="5" value="0.5"/>
-            </given>
-          </given>
-          <given option_id="1">
-            <given option_id="6">
-              <prob option_id="4" value="0.5"/>
-              <prob option_id="5" value="0.5"/>
-            </given>
-            <given option_id="7">
-              <prob option_id="4" value="0.5"/>
-              <prob option_id="5" value="0.5"/>
-            </given>
-          </given>
-        </given>
+        <prob option="decision0.0" value="0.5"/>
+        <prob option="decision0.1" value="0.5"/>
       </probabilities>
     </decision>
     <decision name="decision1" type="String">
       <english>Decision 1</english>
       <dependencies>
-        <dependency decision="decision2"/>
+        <dependency decision="decision0"/>
+        <dependency decision="decision3"/>
+        <dependency decision="special_case"/>
       </dependencies>
       <options>
-        <option name="2">
+        <option name="0" path="decision1.0">
           <english>0</english>
         </option>
-        <option name="3">
+        <option name="1" path="decision1.1">
           <english>1</english>
         </option>
       </options>
       <probabilities>
-        <given option_id="4">
-          <prob option_id="2" value="0.5"/>
-          <prob option_id="3" value="0.5"/>
+        <given option="decision0.0">
+          <given option="decision3.0">
+            <given option="special_case.0">
+              <prob option="decision1.0" value="0.5"/>
+              <prob option="decision1.1" value="0.5"/>
+            </given>
+            <given option="special_case.1">
+              <prob option="decision1.0" value="0.5"/>
+              <prob option="decision1.1" value="0.5"/>
+            </given>
+          </given>
+          <given option="decision3.1">
+            <given option="special_case.0">
+              <prob option="decision1.0" value="0.5"/>
+              <prob option="decision1.1" value="0.5"/>
+            </given>
+            <given option="special_case.1">
+              <prob option="decision1.0" value="0.5"/>
+              <prob option="decision1.1" value="0.5"/>
+            </given>
+          </given>
         </given>
-        <given option_id="5">
-          <prob option_id="2" value="0.5"/>
-          <prob option_id="3" value="0.5"/>
+        <given option="decision0.1">
+          <given option="decision3.0">
+            <given option="special_case.0">
+              <prob option="decision1.0" value="0.5"/>
+              <prob option="decision1.1" value="0.5"/>
+            </given>
+            <given option="special_case.1">
+              <prob option="decision1.0" value="0.5"/>
+              <prob option="decision1.1" value="0.5"/>
+            </given>
+          </given>
+          <given option="decision3.1">
+            <given option="special_case.0">
+              <prob option="decision1.0" value="0.5"/>
+              <prob option="decision1.1" value="0.5"/>
+            </given>
+            <given option="special_case.1">
+              <prob option="decision1.0" value="0.5"/>
+              <prob option="decision1.1" value="0.5"/>
+            </given>
+          </given>
         </given>
       </probabilities>
     </decision>
@@ -123,16 +83,56 @@
       <english>Decision 3</english>
       <dependencies/>
       <options>
-        <option name="6">
+        <option name="0" path="decision3.0">
           <english>0</english>
         </option>
-        <option name="7">
+        <option name="1" path="decision3.1">
           <english>1</english>
         </option>
       </options>
       <probabilities>
-        <prob option_id="6" value="0.5"/>
-        <prob option_id="7" value="0.5"/>
+        <prob option="decision3.0" value="0.5"/>
+        <prob option="decision3.1" value="0.5"/>
+      </probabilities>
+    </decision>
+    <decision name="decision2" type="String">
+      <english>Decision 2</english>
+      <dependencies>
+        <dependency decision="decision1"/>
+      </dependencies>
+      <options>
+        <option name="0" path="decision2.0">
+          <english>0</english>
+        </option>
+        <option name="1" path="decision2.1">
+          <english>1</english>
+        </option>
+      </options>
+      <probabilities>
+        <given option="decision1.0">
+          <prob option="decision2.0" value="0.5"/>
+          <prob option="decision2.1" value="0.5"/>
+        </given>
+        <given option="decision1.1">
+          <prob option="decision2.0" value="0.5"/>
+          <prob option="decision2.1" value="0.5"/>
+        </given>
+      </probabilities>
+    </decision>
+    <decision name="special_case" type="String">
+      <english/>
+      <dependencies/>
+      <options>
+        <option name="0" path="special_case.0">
+          <english>0</english>
+        </option>
+        <option name="1" path="special_case.1">
+          <english>1</english>
+        </option>
+      </options>
+      <probabilities>
+        <prob option="special_case.0" value="0.68692"/>
+        <prob option="special_case.1" value="0.35514"/>
       </probabilities>
     </decision>
   </decisions>

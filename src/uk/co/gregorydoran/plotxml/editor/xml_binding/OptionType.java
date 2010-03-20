@@ -17,41 +17,44 @@ public class OptionType
 {
     private String english;
     private String name;
-    private long id;
+    private OptionsType parent;
 
-    private static long nextID = 0;
-
-    public long getID()
+    public OptionType(String nameValue, OptionsType parentOptions)
     {
-	return (id);
-    }
-
-    private void generateID()
-    {
-	id = nextID;
-	nextID++;
+	name = nameValue;
+	english = nameValue;
+	parent = parentOptions;
     }
 
     public OptionType(String name_value)
     {
 	name = name_value;
 	english = name_value;
-	generateID();
     }
 
     public OptionType()
     {
-	generateID();
     }
 
     public void setPath(String newPath)
     {
+	// Do nowt, this is just to trick the JIBX binder.
+    }
+
+    public OptionsType getParent()
+    {
+	return (parent);
+    }
+
+    public void setParent(Object parentValue)
+    {
+	parent = (OptionsType) parentValue;
     }
 
     public String getPath()
     {
 	// At the minute just returns an ID
-	return (String.valueOf(this.getID()));
+	return (this.getParent().getParent().getName() + "." + this.getName());
     }
 
     /**

@@ -17,7 +17,16 @@ import java.util.List;
 public class OptionsType
 {
     private List<OptionType> optionList = new ArrayList<OptionType>();
-    private Decision decision = null;
+    private Decision parent = null;
+
+    public OptionsType()
+    {
+    }
+
+    public OptionsType(Decision parentDecision)
+    {
+	parent = parentDecision;
+    }
 
     /**
      * Get the list of 'option' element items.
@@ -44,8 +53,13 @@ public class OptionsType
      * @param d
      *            Decision object as parent.
      */
-    public void setDecision(Object d)
+    private void setParent(Object decision)
     {
-	decision = (Decision) d;
+	parent = (Decision) decision;
+    }
+
+    public Decision getParent()
+    {
+	return (parent);
     }
 }

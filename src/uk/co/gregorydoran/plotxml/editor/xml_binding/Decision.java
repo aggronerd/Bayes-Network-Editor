@@ -31,18 +31,23 @@ public class Decision
 {
     protected String english;
     protected DependenciesType dependencies = new DependenciesType();
-    protected OptionsType options = new OptionsType();
+    protected OptionsType options = new OptionsType(this);
     protected ProbabilitiesType probabilities = new ProbabilitiesType();
     protected String name;
-    protected String type;
+    protected String type = new String("String");
 
     public Decision()
     {
-	options = new OptionsType();
-	this.options.getOptions().add(new OptionType("0"));
-	this.options.getOptions().add(new OptionType("1"));
+	OptionType o1 = new OptionType("0");
+	o1.setParent(this.getOptions());
+	OptionType o2 = new OptionType("1");
+	o2.setParent(this.getOptions());
+
+	this.options.getOptions().add(o1);
+	this.options.getOptions().add(o2);
+
 	dependencies = new DependenciesType();
-	updateDependencies();
+	updateProbabilities();
     }
 
     /**
@@ -263,14 +268,14 @@ public class Decision
 		dep.setDecision(d);
 		dependencies.getDependencies().add(dep);
 	    }
-	    // Update probability elements
 
+	    // Update probability elements
 	    getProbabilities().setGivens(
 		    getNewGivens(getDependencies().getDecisions()));
 	}
 	else
 	{
-	    updateDependencies();
+	    updateProbabilities();
 	}
 
     }
@@ -278,7 +283,7 @@ public class Decision
     /**
      * Assumes that this Decision is not dependent on any others.
      */
-    public void updateDependencies()
+    public void updateProbabilities()
     {
 	// There are no dependencies so we just add the probabilities for
 	// the options for this decision.
@@ -288,6 +293,19 @@ public class Decision
 	    p.setValue(1.0f / this.getOptions().getOptions().size());
 	    p.setOption(o);
 	    getProbabilities().getProbs().add(p);
+	}
+    }
+
+    /**
+     * Calls update dependencies for all dependent decisions. Will break due to
+     * circular references.
+     */
+    public void updateAllDependant(Graph<Decision, Dependency> g)
+    {
+	Collection<Decision> collection = g.getSuccessors(this);
+	for (Decision d : collection)
+	{
+	    d.updateDependencies(g);
 	}
     }
 

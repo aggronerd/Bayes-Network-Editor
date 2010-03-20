@@ -6,7 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.swing.JButton;
@@ -21,7 +20,6 @@ import javax.swing.event.DocumentListener;
 import org.apache.log4j.Logger;
 
 import uk.co.gregorydoran.plotxml.editor.xml_binding.Decision;
-import uk.co.gregorydoran.plotxml.editor.xml_binding.OptionType;
 
 public class DecisionPanel extends JPanel implements ActionListener,
 	DocumentListener
@@ -226,17 +224,9 @@ public class DecisionPanel extends JPanel implements ActionListener,
 	OptionsEditor optionsEditorDialog = new OptionsEditor(
 		getParentWindow(), decision);
 
-	List<OptionType> newOptions = optionsEditorDialog.showEditOptions();
+	optionsEditorDialog.setVisible(true);
 
-	if (newOptions != null)
-	{
-	    decision.getOptions().setOptions(newOptions);
-
-	    // TODO: Make cleverer.
-	    decision.updateDependencies(((MainWindow) getParentWindow())
-		    .getGraph());
-	}
-
+	this.getRootPane().repaint();
     }
 
     @Override

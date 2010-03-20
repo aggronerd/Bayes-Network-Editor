@@ -6,8 +6,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -32,13 +30,9 @@ public class OptionsEditor extends JDialog implements ActionListener
     private JPanel jPanelOptionsControls = null;
     private JPanel jPanelButtons = null;
     private JButton jButtonOk = null;
-    private JButton jButtonCancel = null;
 
     private Decision decision = null;
-    private List<OptionType> options;
     DefaultTableModel tableData;
-
-    private boolean cancelled = false;
 
     /**
      * @param owner
@@ -47,28 +41,7 @@ public class OptionsEditor extends JDialog implements ActionListener
     {
 	super(owner, true);
 	decision = d;
-	options = new ArrayList<OptionType>(decision.getOptions().getOptions());
-
 	initialize();
-    }
-
-    /**
-     * Displays the dialog and returns the new OptionsType object or null if the
-     * user decides to cancel.
-     * 
-     * @return
-     */
-    public List<OptionType> showEditOptions()
-    {
-	this.setVisible(true);
-	if (cancelled)
-	{
-	    return (null);
-	}
-	else
-	{
-	    return (options);
-	}
     }
 
     /**
@@ -137,16 +110,40 @@ public class OptionsEditor extends JDialog implements ActionListener
 	    tableData.setColumnIdentifiers(headers);
 	    jTableOptions = new JTable(tableData);
 
-	    // Load the data into the table.
-	    String[] content = new String[2];
-	    for (OptionType o : options)
-	    {
-		content[0] = o.getName();
-		content[1] = o.getEnglish();
-		tableData.addRow(content);
-	    }
+	    refreshTable();
+
 	}
 	return jTableOptions;
+    }
+
+    /**
+     * Recreates the table based on the options in the options List.
+     */
+    public void refreshTable()
+    {
+	// Load the data into the table.
+	String[] content = new String[2];
+	tableData.setRowCount(0);
+	for (OptionType o : decision.getOptions().getOptions())
+	{
+	    content[0] = o.getName();
+	    content[1] = o.getEnglish();
+	    tableData.addRow(content);
+	}
+    }
+
+    /**
+     * Updates the options List based on the contents of the table.
+     */
+    public void updateOptions()
+    {
+	for (int i = 0; i < tableData.getRowCount(); i++)
+	{
+	    decision.getOptions().getOptions().get(i).setName(
+		    (String) tableData.getValueAt(i, 0));
+	    decision.getOptions().getOptions().get(i).setEnglish(
+		    (String) tableData.getValueAt(i, 1));
+	}
     }
 
     /**
@@ -164,8 +161,13 @@ public class OptionsEditor extends JDialog implements ActionListener
 	    {
 		public void actionPerformed(java.awt.event.ActionEvent e)
 		{
-		    String row[] = { "new_option", "New Option" };
-		    tableData.addRow(row);
+		    OptionType newOption = new OptionType();
+		    newOption.setName("change_me");
+		    newOption.setEnglish("");
+		    decision.getOptions().getOptions().add(newOption);
+		    refreshTable();
+
+		    // TODO: Add call to update recidual givens.
 		}
 	    });
 	}
@@ -187,8 +189,16 @@ public class OptionsEditor extends JDialog implements ActionListener
 	    {
 		public void actionPerformed(java.awt.event.ActionEvent e)
 		{
-		    // Removes the selected row.
-		    tableData.removeRow(jTableOptions.getSelectedRow());
+		    if (jTableOptions.getSelectedRow() >= 0)
+		    {
+			// Removes the selected row.
+			decision.getOptions().getOptions().remove(
+				jTableOptions.getSelectedRow());
+			refreshTable();
+
+			decision.updateDependencies(((MainWindow) getParent())
+				.getGraph());
+		    }
 		}
 	    });
 	}
@@ -233,18 +243,12 @@ public class OptionsEditor extends JDialog implements ActionListener
     {
 	if (jPanelButtons == null)
 	{
-	    GridBagConstraints gridBagConstraints3 = new GridBagConstraints();
-	    gridBagConstraints3.ipadx = 30;
-	    gridBagConstraints3.insets = new Insets(0, 0, 0, 0);
-	    gridBagConstraints3.anchor = GridBagConstraints.EAST;
-	    gridBagConstraints3.weightx = 0.0;
 	    GridBagConstraints gridBagConstraints2 = new GridBagConstraints();
 	    gridBagConstraints2.ipadx = 40;
 	    gridBagConstraints2.anchor = GridBagConstraints.EAST;
 	    jPanelButtons = new JPanel();
 	    jPanelButtons.setLayout(new GridBagLayout());
 	    jPanelButtons.add(getJButtonOk(), gridBagConstraints2);
-	    jPanelButtons.add(getJButtonCancel(), gridBagConstraints3);
 	}
 	return jPanelButtons;
     }
@@ -264,62 +268,14 @@ public class OptionsEditor extends JDialog implements ActionListener
 	    {
 		public void actionPerformed(java.awt.event.ActionEvent e)
 		{
-		    // Update decision options.
-		    options.clear();
-		    for (int i = 0; i < tableData.getRowCount(); i++)
-		    {
-			OptionType o = new OptionType();
-			o.setName((String) tableData.getValueAt(i, 0));
-			o.setEnglish((String) tableData.getValueAt(i, 1));
-			options.add(o);
-		    }
-
-		    // Close the window.
-		    // TODO: I'm not much of a JAva programmer, but surely this
-		    // isn't how they do it?
-		    ((JButton) e.getSource()).getParent().getParent()
-			    .getParent().getParent().getParent().setVisible(
-				    false);
+		    // Replace the options data with the latest values in the
+		    // database.
+		    updateOptions();
+		    setVisible(false);
 		}
 	    });
 	}
 	return jButtonOk;
-    }
-
-    /**
-     * This method initialises jButtonCancel
-     * 
-     * @return javax.swing.JButton
-     */
-    private JButton getJButtonCancel()
-    {
-	if (jButtonCancel == null)
-	{
-	    jButtonCancel = new JButton();
-	    jButtonCancel.setText("Cancel");
-	    jButtonCancel.addActionListener(new java.awt.event.ActionListener()
-	    {
-		public void actionPerformed(java.awt.event.ActionEvent e)
-		{
-		    // TODO: I'm not much of a JAva programmer, but surely this
-		    // isn't how they do it?
-		    ((JButton) e.getSource()).getParent().getParent()
-			    .getParent().getParent().getParent().setVisible(
-				    false);
-		}
-	    });
-	    jButtonCancel.addActionListener(new java.awt.event.ActionListener()
-	    {
-		public void actionPerformed(java.awt.event.ActionEvent e)
-		{
-		    System.out.println("actionPerformed()"); // TODO
-		    // Auto-generated
-		    // Event stub
-		    // actionPerformed()
-		}
-	    });
-	}
-	return jButtonCancel;
     }
 
     @Override
