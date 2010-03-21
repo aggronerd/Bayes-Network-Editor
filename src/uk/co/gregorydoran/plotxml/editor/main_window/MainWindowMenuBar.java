@@ -36,7 +36,7 @@ public class MainWindowMenuBar extends JMenuBar
 
 	menuItemNew = new JMenuItem("New");
 	menuItemNew.addActionListener((ActionListener) mainWindow);
-	menuItemNew.setActionCommand("new_plot");
+	menuItemNew.setActionCommand("new");
 	menuFile.add(menuItemNew);
 
 	menuFile.addSeparator();
@@ -49,12 +49,12 @@ public class MainWindowMenuBar extends JMenuBar
 
 	menuItemSaveAs = new JMenuItem("Save As...");
 	menuItemSaveAs.addActionListener((ActionListener) mainWindow);
-	menuItemSaveAs.setEnabled(false);
+	menuItemSaveAs.setActionCommand("save_as");
 	menuFile.add(menuItemSaveAs);
 
 	menuItemOpen = new JMenuItem("Open...");
 	menuItemOpen.addActionListener((ActionListener) mainWindow);
-	menuItemOpen.setActionCommand("open_plot");
+	menuItemOpen.setActionCommand("open");
 	menuFile.add(menuItemOpen);
 
 	menuFile.addSeparator();

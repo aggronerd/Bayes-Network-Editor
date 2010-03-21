@@ -162,7 +162,7 @@ public class OptionsEditor extends JDialog implements ActionListener
 		public void actionPerformed(java.awt.event.ActionEvent e)
 		{
 		    OptionType newOption = new OptionType();
-		    newOption.setParent(decision);
+		    newOption.setParent(decision.getOptions());
 		    newOption.setName("change_me");
 		    newOption.setEnglish("");
 		    decision.getOptions().getOptions().add(newOption);

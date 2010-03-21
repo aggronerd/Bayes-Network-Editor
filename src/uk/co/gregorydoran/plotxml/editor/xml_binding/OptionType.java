@@ -1,5 +1,7 @@
 package uk.co.gregorydoran.plotxml.editor.xml_binding;
 
+import org.jibx.runtime.IUnmarshallingContext;
+
 /**
  * Schema fragment(s) for this class:
  * 
@@ -47,6 +49,11 @@ public class OptionType
     public void setParent(Object parentValue)
     {
 	parent = (OptionsType) parentValue;
+    }
+
+    public void postset(IUnmarshallingContext ctx)
+    {
+	parent = (OptionsType) ctx.getStackObject(1);
     }
 
     public String getPath()

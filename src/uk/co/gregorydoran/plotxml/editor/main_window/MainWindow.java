@@ -79,7 +79,7 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
     // Plot
     private PlotType currentPlot = null;
     private boolean plotSaved = false;
-    private String plotFilename = null;
+    private File plotFile = null;
 
     /**
      * Creates the window and controls.
@@ -244,30 +244,25 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 
 	else if ("save".equals(e.getActionCommand()))
 	{
-	    saveNetworkAs("filename.xml");
+	    if (plotFile != null)
+	    {
+		log.debug("Saving to old file '" + plotFile.getAbsolutePath()
+			+ "'");
+		saveNetworkAs(plotFile.getAbsolutePath());
+	    }
+	    else
+	    {
+		showSaveAs();
+	    }
+
 	}
 
 	else if ("save_as".equals(e.getActionCommand()))
 	{
-	    JFileChooser fc = new JFileChooser();
-
-	    int returnVal = fc.showSaveDialog(this);
-
-	    if (returnVal == JFileChooser.APPROVE_OPTION)
-	    {
-		File file = fc.getSelectedFile();
-		log.debug("Opening: " + file.getName());
-
-		this.openNetwork(file.getName());
-	    }
-	    else
-	    {
-		log.debug("Open command cancelled by user");
-	    }
-
+	    showSaveAs();
 	}
 
-	else if ("new_plot".equals(e.getActionCommand()))
+	else if ("new".equals(e.getActionCommand()))
 	{
 	    if ((plotSaved != true)
 		    && (JOptionPane
@@ -279,11 +274,13 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 		return;
 	    }
 	    createNewPlot();
+	    plotFile = null;
 	}
 
-	else if ("open_plot".equals(e.getActionCommand()))
+	else if ("open".equals(e.getActionCommand()))
 	{
 	    JFileChooser fc = new JFileChooser();
+	    fc.setFileFilter(new XMLFileFilter());
 
 	    int returnVal = fc.showOpenDialog(this);
 
@@ -291,20 +288,38 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 	    {
 		File file = fc.getSelectedFile();
 		log.debug("Opening: " + file.getName());
-
-		this.openNetwork(file.getName());
+		this.openNetwork(file.getAbsolutePath());
+		plotFile = file;
 	    }
 	    else
 	    {
 		log.debug("Open command cancelled by user");
 	    }
-
 	}
 
     }
 
+    private void showSaveAs()
+    {
+	JFileChooser fc = new JFileChooser();
+	fc.setFileFilter(new XMLFileFilter());
+
+	int returnVal = fc.showSaveDialog(this);
+
+	if (returnVal == JFileChooser.APPROVE_OPTION)
+	{
+	    plotFile = fc.getSelectedFile();
+	    log.debug("Saving plot: " + plotFile.getAbsolutePath());
+	    this.saveNetworkAs(plotFile.getAbsolutePath());
+	}
+	else
+	{
+	    log.debug("Save as command cancelled by user");
+	}
+    }
+
     /**
-     * Captures item state changes from the graph's verteces and edges.
+     * Captures item state changes from the graph's vertices and edges.
      * 
      */
     @Override

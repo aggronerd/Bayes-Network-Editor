@@ -14,7 +14,7 @@
     
     <!-- Dependencies: -->
     <structure field="dependencies" usage="optional" name="dependencies" type="uk.co.gregorydoran.plotxml.editor.xml_binding.DependenciesType">
-    	<collection field="dependencyList" create-type="java.util.ArrayList">
+    	<collection field="dependencyList" create-type="java.util.ArrayList" usage="optional">
 			<structure name="dependency" type="uk.co.gregorydoran.plotxml.editor.xml_binding.DependencyType">
 				<value style="attribute" name="decision" field="decision" ident="ref" />
 			</structure>
@@ -29,22 +29,22 @@
     
     <!-- Probabilities: -->
     <structure field="probabilities" name="probabilities" type="uk.co.gregorydoran.plotxml.editor.xml_binding.ProbabilitiesType">
-    	<collection create-type="java.util.ArrayList" field="givenList" />
-	    <collection create-type="java.util.ArrayList" field="probList" />
+    	<collection create-type="java.util.ArrayList" field="givenList" name="givens" usage="optional"/>
+	    <collection create-type="java.util.ArrayList" field="probList" name="probs" usage="optional"/>
     </structure>
   </mapping>
   
   <!-- Option: -->
-  <mapping name="option" class="uk.co.gregorydoran.plotxml.editor.xml_binding.OptionType" pre-set="setParent">
+  <mapping name="option" class="uk.co.gregorydoran.plotxml.editor.xml_binding.OptionType" post-set="postset">
     <value style="element" name="english" field="english" usage="optional"/>
     <value style="attribute" name="name" field="name" />
-    <value style="attribute" name="path" get-method="getPath" set-method="setPath" ident="def" usage="optional" />
+    <value style="attribute" name="path" get-method="getPath" set-method="setPath" ident="def"/>
   </mapping>
   
   <!-- Given: -->
   <mapping name="given" class="uk.co.gregorydoran.plotxml.editor.xml_binding.GivenType">
-    <collection create-type="java.util.ArrayList" field="givenList" />
-    <collection create-type="java.util.ArrayList" field="probList" />
+    <collection create-type="java.util.ArrayList" field="givenList" name="givens" usage="optional" />
+    <collection create-type="java.util.ArrayList" field="probList" name="probs" usage="optional"/>
     <value style="attribute" name="option" field="option" ident="ref" />
   </mapping>
   

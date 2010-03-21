@@ -38,16 +38,6 @@ public class Decision
 
     public Decision()
     {
-	OptionType o1 = new OptionType("0");
-	o1.setParent(this.getOptions());
-	OptionType o2 = new OptionType("1");
-	o2.setParent(this.getOptions());
-
-	this.options.getOptions().add(o1);
-	this.options.getOptions().add(o2);
-
-	dependencies = new DependenciesType();
-	updateProbabilities();
     }
 
     /**

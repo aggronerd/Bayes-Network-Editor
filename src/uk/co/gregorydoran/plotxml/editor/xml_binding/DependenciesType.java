@@ -46,9 +46,12 @@ public class DependenciesType
     public List<Decision> getDecisions()
     {
 	List<Decision> result = new ArrayList<Decision>();
-	for (DependencyType d : dependencyList)
+	if (dependencyList != null)
 	{
-	    result.add(d.getDecision());
+	    for (DependencyType d : dependencyList)
+	    {
+		result.add(d.getDecision());
+	    }
 	}
 	return (result);
     }
