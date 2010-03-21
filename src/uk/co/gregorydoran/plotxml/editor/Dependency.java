@@ -1,5 +1,5 @@
 package uk.co.gregorydoran.plotxml.editor;
 
-public class Dependency {
+public class Dependency { 
 
 }

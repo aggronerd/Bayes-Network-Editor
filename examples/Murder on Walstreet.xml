@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plot name="Murder on Walstreet">
-  <decisions>
+<plot name="Murder on Walstreet"> 
+  <decisions>  
     <decision name="suspect1_poorer_than_victim" x="96.5528564453125" y="599.72802734375" type="String">
       <english/>
       <dependencies>
@@ -10,7 +10,7 @@
         <option name="true" path="suspect1_poorer_than_victim.true"/>
         <option name="false" path="suspect1_poorer_than_victim.false"/>
       </options>
-      <probabilities>
+      <probabilities> 
         <givens>
           <given option="victim_income.under_20k">
             <givens/>
