@@ -187,7 +187,7 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 	log.debug("New graph and visualisation created.");
 
 	// Setup tools panel.
-	nodePanel = new NodePanel(g);
+	nodePanel = new NodePanel();
 
 	// Setup horizontal split.
 	splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, gzsp, nodePanel);

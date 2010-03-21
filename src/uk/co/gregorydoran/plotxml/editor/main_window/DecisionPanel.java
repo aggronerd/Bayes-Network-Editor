@@ -37,8 +37,6 @@ public class DecisionPanel extends JPanel implements ActionListener,
     private Decision decision;
     private ProbabilitiesControl probPanel = null;
 
-    private JButton jButtonDelete;
-
     /**
      * This is the default constructor
      */

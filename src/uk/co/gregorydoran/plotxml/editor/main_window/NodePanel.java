@@ -4,10 +4,9 @@ import java.awt.BorderLayout;
 import java.util.EventListener;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
-import uk.co.gregorydoran.plotxml.editor.Dependency;
 import uk.co.gregorydoran.plotxml.editor.xml_binding.Decision;
-import edu.uci.ics.jung.graph.Graph;
 
 /**
  * 
@@ -17,14 +16,13 @@ import edu.uci.ics.jung.graph.Graph;
  * @author Gregory Doran <www.gregorydoran.co.uk>
  * 
  */
-public class NodePanel extends JPanel implements EventListener
+public class NodePanel extends JScrollPane implements EventListener
 {
 
     private static final long serialVersionUID = -4341231428121402538L;
 
-    DecisionPanel decisionPanel;
-    Decision activeDecision;
-    private Graph<Decision, Dependency> activeGraph;
+    JPanel decisionPanel = null;
+    Decision activeDecision = null;
 
     /**
      * Sets the panel's active decision and displays the controls for it.
@@ -58,25 +56,15 @@ public class NodePanel extends JPanel implements EventListener
     }
 
     /**
-     * Displays the panel controls.
-     */
-    public NodePanel(Graph<Decision, Dependency> graph)
-    {
-	activeGraph = graph;
-
-	this.setLayout(new BorderLayout());
-
-	decisionPanel = null;
-    }
-
-    /**
      * Reloads the controls for the current decision.
      */
     public void reloadControls()
     {
 	clearControls();
 
-	decisionPanel = new DecisionPanel(activeDecision);
+	decisionPanel = new JPanel(new BorderLayout());
+	decisionPanel.add(new DecisionPanel(activeDecision),
+		BorderLayout.PAGE_START);
 
 	// GridBagConstraints gbc = new GridBagConstraints();
 	// gbc.gridx = 0;
@@ -84,14 +72,14 @@ public class NodePanel extends JPanel implements EventListener
 	// gbc.fill = GridBagConstraints.HORIZONTAL;
 	// gbc.anchor = GridBagConstraints.NORTH;
 
-	this.add(decisionPanel, BorderLayout.PAGE_START);
+	this.setViewportView(decisionPanel);
     }
 
     public void clearControls()
     {
 	if (decisionPanel != null)
 	{
-	    this.remove(decisionPanel);
+	    this.setViewportView(null);
 	}
 	decisionPanel = null;
     }
