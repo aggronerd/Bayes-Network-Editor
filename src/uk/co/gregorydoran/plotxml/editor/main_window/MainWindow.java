@@ -81,6 +81,8 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
     private boolean plotSaved = false;
     private File plotFile = null;
 
+    private boolean isOpeningFile = false;
+
     /**
      * Creates the window and controls.
      */
@@ -277,6 +279,26 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 	    plotFile = null;
 	}
 
+	else if ("delete_decision".equals(e.getActionCommand()))
+	{
+	    /**
+	     * Deletes the current decision
+	     */
+	    log.debug("'delete_decision' action command called");
+
+	    if (nodePanel.getActiveDecision() != null)
+	    {
+		log.debug("Proceeding to delete "
+			+ nodePanel.getActiveDecision());
+		nodePanel.getActiveDecision().delete(g);
+		nodePanel.setActiveDecision(null);
+	    }
+	    else
+	    {
+		log.debug("No node selected - cannot delete.");
+	    }
+	}
+
 	else if ("open".equals(e.getActionCommand()))
 	{
 	    JFileChooser fc = new JFileChooser();
@@ -340,7 +362,11 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 	    // Makes sure everything fits.
 	    splitPane.getRightComponent().validate();
 	}
-	if (subject instanceof Dependency)
+	else if (subject instanceof Dependency)
+	{
+
+	}
+	else
 	{
 
 	}
@@ -368,6 +394,8 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 	currentPlot.getDecisions().clear();
 	for (Decision d : g.getVertices())
 	{
+	    d.setyPosition(layout.getY(d));
+	    d.setxPosition(layout.getX(d));
 	    currentPlot.getDecisions().add((Decision) d);
 	}
 
@@ -405,6 +433,8 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
      */
     public void openNetwork(String filename)
     {
+	isOpeningFile = true;
+
 	// Prepare binding objects.
 	IBindingFactory bfact;
 
@@ -426,6 +456,7 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 	    for (Decision d : currentPlot.getDecisions())
 	    {
 		g.addVertex(d);
+		layout.setLocation(d, d.getxPosition(), d.getyPosition());
 	    }
 
 	    // Link the decisions.
@@ -437,9 +468,9 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 		}
 	    }
 
-	    layout.reset();
-
 	    this.repaint();
+
+	    isOpeningFile = false;
 
 	}
 	catch (FileNotFoundException e)
@@ -463,21 +494,24 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 	// An edge is added.
 	if (graphEvent.getType() == GraphEvent.Type.EDGE_ADDED)
 	{
+	    if (!isOpeningFile)
+	    {
 
-	    // TODO: Check for circular references.
+		// TODO: Check for circular references.
 
-	    // Update target dependencies
-	    graphEvent.getSource().getDest(
-		    ((GraphEvent.Edge<Decision, Dependency>) graphEvent)
-			    .getEdge()).updateDependencies(
-		    graphEvent.getSource());
+		// Update target dependencies
+		graphEvent.getSource().getDest(
+			((GraphEvent.Edge<Decision, Dependency>) graphEvent)
+				.getEdge()).updateDependencies(
+			graphEvent.getSource());
 
-	    // Update target probabilities
-	    graphEvent.getSource().getDest(
-		    ((GraphEvent.Edge<Decision, Dependency>) graphEvent)
-			    .getEdge()).updateProbabilities();
+		// Update target probabilities
+		graphEvent.getSource().getDest(
+			((GraphEvent.Edge<Decision, Dependency>) graphEvent)
+				.getEdge()).updateProbabilities();
+
+	    }
 	}
-
     }
 
     public PlotType getCurrentPlot()

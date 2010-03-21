@@ -9,6 +9,8 @@
   <!-- Decision: -->
   <mapping name="decision" class="uk.co.gregorydoran.plotxml.editor.xml_binding.Decision">
     <value style="attribute" name="name" field="name" ident="def" />
+    <value style="attribute" name="x" field="xPosition" />
+    <value style="attribute" name="y" field="yPosition" />
     <value style="element" name="english" field="english" usage="optional" />
     <value style="attribute" name="type" field="type" />
     

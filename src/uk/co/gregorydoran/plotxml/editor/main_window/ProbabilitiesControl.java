@@ -55,7 +55,7 @@ public class ProbabilitiesControl extends JPanel
 	    gbc.anchor = GridBagConstraints.WEST;
 	    gbc.weightx = 1.0;
 	    gbc.insets = new Insets(10, 0, 10, 0);
-	    this.add(new JLabel("Given " + d.getName(), JLabel.CENTER), gbc);
+	    this.add(new JLabel(d.getName(), JLabel.CENTER), gbc);
 	    i++;
 	}
 	GridBagConstraints gbc = new GridBagConstraints();

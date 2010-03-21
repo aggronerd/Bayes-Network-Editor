@@ -35,6 +35,53 @@ public class Decision
     protected ProbabilitiesType probabilities = new ProbabilitiesType();
     protected String name;
     protected String type = new String("String");
+    protected Double xPosition, yPosition;
+
+    /**
+     * Removes this dependency from the graph provided in the arguments.
+     * 
+     * @param graph
+     */
+    public void delete(Graph<Decision, Dependency> graph)
+    {
+	// Retrieves all successors
+	List<Decision> dependantDecisions = new ArrayList<Decision>(graph
+		.getSuccessors(this));
+
+	// Removes itself and incidental edges from the graph
+	for (Dependency d : graph.getIncidentEdges(this))
+	{
+	    graph.removeEdge(d);
+	}
+	graph.removeVertex(this);
+
+	// Remove all dependencies on this object
+	for (Decision dependant : dependantDecisions)
+	{
+	    dependant.updateDependencies(graph);
+	    dependant.updateProbabilities();
+	}
+    }
+
+    public Double getxPosition()
+    {
+	return xPosition;
+    }
+
+    public void setxPosition(Double xPosition)
+    {
+	this.xPosition = xPosition;
+    }
+
+    public Double getyPosition()
+    {
+	return yPosition;
+    }
+
+    public void setyPosition(Double yPosition)
+    {
+	this.yPosition = yPosition;
+    }
 
     public Decision()
     {

@@ -37,6 +37,8 @@ public class DecisionPanel extends JPanel implements ActionListener,
     private Decision decision;
     private ProbabilitiesControl probPanel = null;
 
+    private JButton jButtonDelete;
+
     /**
      * This is the default constructor
      */
@@ -81,6 +83,7 @@ public class DecisionPanel extends JPanel implements ActionListener,
 	GridBagConstraints gbcNameField = new GridBagConstraints();
 	gbcNameField.gridx = 1;
 	gbcNameField.gridy = 0;
+	gbcNameField.gridwidth = 2;
 	gbcNameField.anchor = GridBagConstraints.WEST;
 	gbcNameField.fill = GridBagConstraints.HORIZONTAL;
 	gbcNameField.weightx = 1.0;
@@ -98,6 +101,7 @@ public class DecisionPanel extends JPanel implements ActionListener,
 	GridBagConstraints gbcQuestionField = new GridBagConstraints();
 	gbcQuestionField.gridx = 1;
 	gbcQuestionField.gridy = 1;
+	gbcQuestionField.gridwidth = 2;
 	gbcQuestionField.anchor = GridBagConstraints.WEST;
 	gbcQuestionField.fill = GridBagConstraints.HORIZONTAL;
 	this.add(getJTextAreaQuestion(), gbcQuestionField);
@@ -178,7 +182,7 @@ public class DecisionPanel extends JPanel implements ActionListener,
 	{
 	    editOptions();
 	}
-	if (e.getSource().equals(jTextFieldName))
+	else if (e.getSource().equals(jTextFieldName))
 	{
 	    // Validate input for decision name
 	    if (Pattern.matches("[a-zA-Z\\d\\_]+", jTextFieldName.getText()))
@@ -300,7 +304,7 @@ public class DecisionPanel extends JPanel implements ActionListener,
 	GridBagConstraints gbcProbabilitiesField = new GridBagConstraints();
 	gbcProbabilitiesField.gridx = 0;
 	gbcProbabilitiesField.gridy = 4;
-	gbcProbabilitiesField.gridwidth = 2;
+	gbcProbabilitiesField.gridwidth = 3;
 	gbcProbabilitiesField.weightx = 1.0;
 	gbcProbabilitiesField.fill = GridBagConstraints.BOTH;
 	this.add(getProbPanel(), gbcProbabilitiesField);

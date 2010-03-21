@@ -27,6 +27,8 @@ public class MainWindowMenuBar extends JMenuBar
     private JMenu menuView;
     private JMenuItem menuItemShowToolbox;
 
+    private JMenuItem menuItemDelete;
+
     public MainWindowMenuBar(MainWindow mainWindow)
     {
 
@@ -86,6 +88,13 @@ public class MainWindowMenuBar extends JMenuBar
 	menuItemPaste = new JMenuItem("Paste");
 	menuItemPaste.addActionListener((ActionListener) mainWindow);
 	menuEdit.add(menuItemPaste);
+
+	menuEdit.addSeparator();
+
+	menuItemDelete = new JMenuItem("Delete");
+	menuItemDelete.setActionCommand("delete_decision");
+	menuItemDelete.addActionListener((ActionListener) mainWindow);
+	menuEdit.add(menuItemDelete);
 
 	// Constructs the 'View' menu
 	menuView = new JMenu("View");

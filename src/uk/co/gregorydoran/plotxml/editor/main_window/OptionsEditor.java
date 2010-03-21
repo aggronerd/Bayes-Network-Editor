@@ -161,6 +161,10 @@ public class OptionsEditor extends JDialog implements ActionListener
 	    {
 		public void actionPerformed(java.awt.event.ActionEvent e)
 		{
+		    // Must update changes that have already been made in the
+		    // table.
+		    updateOptions();
+
 		    OptionType newOption = new OptionType();
 		    newOption.setParent(decision.getOptions());
 		    newOption.setName("change_me");
@@ -197,6 +201,10 @@ public class OptionsEditor extends JDialog implements ActionListener
 		{
 		    if (jTableOptions.getSelectedRow() >= 0)
 		    {
+			// Must update changes that have already been made in
+			// the table.
+			updateOptions();
+
 			// Removes the selected row.
 			decision.getOptions().getOptions().remove(
 				jTableOptions.getSelectedRow());
