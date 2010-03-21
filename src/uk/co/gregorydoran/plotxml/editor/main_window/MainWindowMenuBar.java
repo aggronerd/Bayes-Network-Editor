@@ -92,7 +92,7 @@ public class MainWindowMenuBar extends JMenuBar
 	menuEdit.addSeparator();
 
 	menuItemDelete = new JMenuItem("Delete");
-	menuItemDelete.setActionCommand("delete_decision");
+	menuItemDelete.setActionCommand("delete");
 	menuItemDelete.addActionListener((ActionListener) mainWindow);
 	menuEdit.add(menuItemDelete);
 

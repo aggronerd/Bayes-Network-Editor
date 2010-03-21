@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -70,7 +72,8 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
     private GraphZoomScrollPane gzsp = null;
     private JSplitPane splitPane = null;
     private NodePanel nodePanel = null;
-    private PickedState<Decision> pickedState = null;
+    private PickedState<Decision> pickedStateDec = null;
+    private PickedState<Dependency> pickedStateDep = null;
 
     // Factories
     private Factory<Decision> vertexFactory = null;
@@ -81,7 +84,12 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
     private boolean plotSaved = false;
     private File plotFile = null;
 
+    // Used to stop events resetting probabilities when loading graph content
+    // from a file
     private boolean isOpeningFile = false;
+
+    private Set<Dependency> selectedDependencies = null;
+    private Set<Decision> selectedDecisions = null;
 
     /**
      * Creates the window and controls.
@@ -206,9 +214,15 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 	vv.setGraphMouse(gm);
 	vv.setBackground(Color.white);
 
+	// Reset collections for selected items
+	selectedDependencies = new HashSet<Dependency>();
+	selectedDecisions = new HashSet<Decision>();
+
 	// Setup listener for picking
-	pickedState = vv.getPickedVertexState();
-	pickedState.addItemListener(this);
+	pickedStateDec = vv.getPickedVertexState();
+	pickedStateDec.addItemListener(this);
+	pickedStateDep = vv.getPickedEdgeState();
+	pickedStateDep.addItemListener(this);
 
 	this.getContentPane().add(splitPane);
 
@@ -279,24 +293,32 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 	    plotFile = null;
 	}
 
-	else if ("delete_decision".equals(e.getActionCommand()))
+	else if ("delete".equals(e.getActionCommand()))
 	{
 	    /**
-	     * Deletes the current decision
+	     * Deletes all selected decisions and dependencies
 	     */
 	    log.debug("'delete_decision' action command called");
 
-	    if (nodePanel.getActiveDecision() != null)
+	    log.debug("Deleting " + selectedDecisions.size() + " nodes");
+	    for (Decision d : selectedDecisions)
 	    {
-		log.debug("Proceeding to delete "
-			+ nodePanel.getActiveDecision());
-		nodePanel.getActiveDecision().delete(g);
-		nodePanel.setActiveDecision(null);
+		d.delete(getGraph());
 	    }
-	    else
+
+	    log.debug("Deleting " + selectedDependencies.size() + " edges");
+	    for (Dependency d : selectedDependencies)
 	    {
-		log.debug("No node selected - cannot delete.");
+		if (d != null)
+		{
+		    Decision destination = getGraph().getDest(d);
+		    getGraph().removeEdge(d);
+		    destination.updateDependencies(getGraph());
+		    destination.updateProbabilities();
+		}
 	    }
+
+	    this.repaint();
 	}
 
 	else if ("open".equals(e.getActionCommand()))
@@ -350,25 +372,44 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 	Object subject = e.getItem();
 	if (subject instanceof Decision)
 	{
+	    // Update Decision object selection
 	    Decision vertex = (Decision) subject;
-	    if (pickedState.isPicked(vertex))
+	    if (pickedStateDec.isPicked(vertex))
 	    {
-		nodePanel.setActiveDecision(vertex);
+		selectedDecisions.add(vertex);
+	    }
+	    else
+	    {
+		selectedDecisions.remove(vertex);
+	    }
+
+	    // If only one Decision is selected then we display update the
+	    // active decision.
+	    if (selectedDecisions.size() == 1)
+	    {
+		nodePanel.setActiveDecision(((Decision) selectedDecisions
+			.toArray()[0]));
 	    }
 	    else
 	    {
 		nodePanel.setActiveDecision(null);
 	    }
+
 	    // Makes sure everything fits.
 	    splitPane.getRightComponent().validate();
 	}
 	else if (subject instanceof Dependency)
 	{
-
-	}
-	else
-	{
-
+	    // Update Dependency object selection
+	    Dependency edge = (Dependency) subject;
+	    if (pickedStateDep.isPicked(edge))
+	    {
+		selectedDependencies.add(edge);
+	    }
+	    else
+	    {
+		selectedDependencies.remove(edge);
+	    }
 	}
     }
 
