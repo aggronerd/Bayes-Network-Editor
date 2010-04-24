@@ -63,7 +63,7 @@ public class ProbabilitiesType
     /**
      * Traverses the givens and balances the probabilities to equal 1.
      */
-    public void balance()
+    public void balance() throws Exception
     {
 	if (probList != null && probList.size() > 0)
 	{
@@ -79,6 +79,12 @@ public class ProbabilitiesType
 		    prob.setValue(prob.getValue() / totalProb);
 		}
 	    }
+	    else
+	    {
+		throw (new Exception(
+			"Bad probabilities found (ie. total <= 0) for decision"));
+	    }
+
 	}
 	else if (givenList != null && givenList.size() > 0)
 	{
@@ -86,6 +92,10 @@ public class ProbabilitiesType
 	    {
 		given.balance();
 	    }
+	}
+	else
+	{
+	    throw (new Exception("No givens or probs for decision."));
 	}
     }
 }

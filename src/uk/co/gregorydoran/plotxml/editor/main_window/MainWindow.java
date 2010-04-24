@@ -431,17 +431,21 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
     public void saveNetworkAs(String filename)
     {
 
-	// Add the dependencies from the graph.
-	currentPlot.getDecisions().clear();
-	for (Decision d : g.getVertices())
-	{
-	    d.setyPosition(layout.getY(d));
-	    d.setxPosition(layout.getX(d));
-	    currentPlot.getDecisions().add((Decision) d);
-	}
-
 	try
 	{
+
+	    // Add the dependencies from the graph.
+	    currentPlot.getDecisions().clear();
+	    for (Decision d : g.getVertices())
+	    {
+
+		d.setyPosition(layout.getY(d));
+		d.setxPosition(layout.getX(d));
+		d.getProbabilities().balance();
+		currentPlot.getDecisions().add((Decision) d);
+
+	    }
+
 	    IBindingFactory bfact = BindingDirectory.getFactory(PlotType.class);
 
 	    IMarshallingContext mctx = bfact.createMarshallingContext();
@@ -450,20 +454,16 @@ public class MainWindow extends JFrame implements ActionListener, ItemListener,
 
 	    mctx.marshalDocument(currentPlot, "UTF-8", null,
 		    new FileOutputStream(filename));
-	}
-	catch (JiBXException e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+
+	    plotSaved = true;
 
 	}
-	catch (FileNotFoundException e)
+	catch (Exception e)
 	{
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
+	    JOptionPane.showMessageDialog(this, "Failed to save file: "
+		    + e.getMessage());
 	}
-
-	plotSaved = true;
 
     }
 

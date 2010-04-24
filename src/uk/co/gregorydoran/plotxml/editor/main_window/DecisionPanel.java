@@ -193,7 +193,16 @@ public class DecisionPanel extends JPanel implements ActionListener,
 	}
 	else if (e.getActionCommand().equals("balance_probabilities"))
 	{
-	    decision.getProbabilities().balance();
+	    try
+	    {
+		decision.getProbabilities().balance();
+	    }
+	    catch (Exception exception)
+	    {
+		log
+			.error("None critcal error: failed to balance probabilties - "
+				+ exception.toString());
+	    }
 	    this.reloadProbPanel();
 
 	}
