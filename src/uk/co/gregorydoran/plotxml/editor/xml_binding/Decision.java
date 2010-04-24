@@ -269,7 +269,10 @@ public class Decision
      */
     public void clearDependencies()
     {
-	dependencies.getDependencies().clear();
+	if (dependencies != null)
+	{
+	    dependencies.getDependencies().clear();
+	}
     }
 
     /**

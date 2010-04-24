@@ -25,6 +25,10 @@ public class DependenciesType
      */
     public List<DependencyType> getDependencies()
     {
+	if (dependencyList == null)
+	{
+	    dependencyList = new ArrayList<DependencyType>();
+	}
 	return dependencyList;
     }
 

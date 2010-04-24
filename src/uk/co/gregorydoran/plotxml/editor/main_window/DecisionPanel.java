@@ -33,6 +33,7 @@ public class DecisionPanel extends JPanel implements ActionListener,
     private JLabel jLabelQuestion = null;
     private JTextArea jTextAreaQuestion = null;
     private JButton jButtonEditOptions = null;
+    private JButton jButtonBalance = null;
     private JLabel jLabelProbabilities = null;
     private Decision decision;
     private ProbabilitiesControl probPanel = null;
@@ -114,6 +115,16 @@ public class DecisionPanel extends JPanel implements ActionListener,
 	jButtonEditOptions.setActionCommand("edit_options");
 	this.add(jButtonEditOptions, gbcOptionsField);
 
+	// Balance probabilities button
+	jButtonBalance = new JButton("Balance Probabilities");
+	GridBagConstraints gbcButtonBalance = new GridBagConstraints();
+	gbcButtonBalance.gridx = 2;
+	gbcButtonBalance.gridy = 2;
+	gbcButtonBalance.anchor = GridBagConstraints.WEST;
+	jButtonBalance.addActionListener(this);
+	jButtonBalance.setActionCommand("balance_probabilities");
+	this.add(jButtonBalance, gbcButtonBalance);
+
 	// Probabilities label
 	jLabelProbabilities = new JLabel("Probabilities:");
 	GridBagConstraints gbcProbabilitiesLabel = new GridBagConstraints();
@@ -179,6 +190,12 @@ public class DecisionPanel extends JPanel implements ActionListener,
 	if (e.getActionCommand().equals("edit_options"))
 	{
 	    editOptions();
+	}
+	else if (e.getActionCommand().equals("balance_probabilities"))
+	{
+	    decision.getProbabilities().balance();
+	    this.reloadProbPanel();
+
 	}
 	else if (e.getSource().equals(jTextFieldName))
 	{
@@ -306,6 +323,10 @@ public class DecisionPanel extends JPanel implements ActionListener,
 	gbcProbabilitiesField.weightx = 1.0;
 	gbcProbabilitiesField.fill = GridBagConstraints.BOTH;
 	this.add(getProbPanel(), gbcProbabilitiesField);
-    }
 
+	// Only way it seemed possible to refresh the controls properly on the
+	// screen.
+	getProbPanel().setVisible(false);
+	getProbPanel().setVisible(true);
+    }
 }

@@ -59,4 +59,33 @@ public class ProbabilitiesType
     {
 	this.probList = probs;
     }
+
+    /**
+     * Traverses the givens and balances the probabilities to equal 1.
+     */
+    public void balance()
+    {
+	if (probList != null && probList.size() > 0)
+	{
+	    float totalProb = 0;
+	    for (ProbType prob : probList)
+	    {
+		totalProb += prob.getValue();
+	    }
+	    if (totalProb > 0)
+	    {
+		for (ProbType prob : probList)
+		{
+		    prob.setValue(prob.getValue() / totalProb);
+		}
+	    }
+	}
+	else if (givenList != null && givenList.size() > 0)
+	{
+	    for (GivenType given : givenList)
+	    {
+		given.balance();
+	    }
+	}
+    }
 }
