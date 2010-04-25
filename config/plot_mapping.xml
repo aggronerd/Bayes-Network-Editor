@@ -11,7 +11,7 @@
     <value style="attribute" name="name" field="name" ident="def" />
     <value style="attribute" name="x" field="xPosition" />
     <value style="attribute" name="y" field="yPosition" />
-    <value style="element" name="english" field="english" usage="optional" />
+    <value style="attribute" name="english" field="english" usage="optional" />
     <value style="attribute" name="type" field="type" />
     
     <!-- Dependencies: -->
@@ -38,7 +38,7 @@
   
   <!-- Option: -->
   <mapping name="option" class="uk.co.gregorydoran.plotxml.editor.xml_binding.OptionType" post-set="postset">
-    <value style="element" name="english" field="english" usage="optional"/>
+    <value style="attribute" name="english" field="english" usage="optional"/>
     <value style="attribute" name="name" field="name" />
     <value style="attribute" name="path" get-method="getPath" set-method="setPath" ident="def"/>
   </mapping>

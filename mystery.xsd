@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema targetNamespace="http://www.gregorydoran.co.uk/bayesplot" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:annotation>
     <xs:documentation xml:lang="en">
      Plot generation schema (http://www.gregorydoran.co.uk).
@@ -22,14 +22,17 @@
 
   <xs:complexType name="DecisionType">
   	<xs:sequence>
-            <xs:element name="english" type="xs:string" minOccurs="1" maxOccurs="1" />
-            <xs:element name="dependencies" type="DependenciesType"
+  		<xs:element name="dependencies" type="DependenciesType"
   			minOccurs="0" maxOccurs="1">
   		</xs:element>
-            <xs:element name="options" type="OptionsType" minOccurs="1" maxOccurs="1" />
-            <xs:element name="probabilities" type="ProbabilitiesType" minOccurs="1" maxOccurs="1"></xs:element>
+  		<xs:element name="options" type="OptionsType" minOccurs="1"
+  			maxOccurs="1" />
+  		<xs:element name="probabilities" type="ProbabilitiesType"
+  			minOccurs="1" maxOccurs="1">
+  		</xs:element>
   	</xs:sequence>
   	<xs:attribute name="name" type="xs:string" use="required" />
+  	<xs:attribute name="english" type="xs:string" use="optional"></xs:attribute>
   	<xs:attribute name="type" use="required">
   		<xs:annotation>
   			<xs:documentation>
@@ -56,12 +59,11 @@
 
   <xs:complexType name="OptionType">
   	<xs:sequence>
-  		<xs:element name="english" type="xs:string" minOccurs="1"
-  			maxOccurs="1" />
   		<xs:element name="decisions" type="DecisionsType"
   			minOccurs="0" maxOccurs="1" />
   	</xs:sequence>
   	<xs:attribute name="name" type="xs:string" use="required" />
+  	<xs:attribute name="english" type="xs:string" use="optional"></xs:attribute>
   </xs:complexType>
 
   <xs:element name="plot" type="PlotType" />
