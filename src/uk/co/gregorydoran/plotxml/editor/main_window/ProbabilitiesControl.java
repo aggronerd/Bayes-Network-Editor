@@ -1,11 +1,13 @@
 package uk.co.gregorydoran.plotxml.editor.main_window;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -161,7 +163,10 @@ public class ProbabilitiesControl extends JPanel
 	gbc.fill = GridBagConstraints.BOTH;
 	gbc.anchor = GridBagConstraints.WEST;
 	gbc.weightx = 1.0;
-	this.add(new JLabel(given.getOption().getName(), JLabel.CENTER), gbc);
+	JLabel optionLabel = new JLabel(given.getOption().getName(),
+		JLabel.CENTER);
+	optionLabel.setBorder(BorderFactory.createLineBorder(Color.black));
+	this.add(optionLabel, gbc);
 
 	return (n);
 
